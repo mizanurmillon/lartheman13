@@ -1,11 +1,12 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\Backend\FaqController;
+use App\Http\Controllers\Web\Backend\TeamController;
 use App\Http\Controllers\Web\Backend\CategoryController;
 use App\Http\Controllers\Web\Backend\DashboardController;
-use App\Http\Controllers\Web\Backend\FaqController;
 use App\Http\Controllers\Web\Backend\SecurityEventController;
 use App\Http\Controllers\Web\Backend\TrainingProgramController;
-use Illuminate\Support\Facades\Route;
 
 
 
@@ -24,12 +25,9 @@ Route::controller(CategoryController::class)->group(function () {
 
 Route::controller(SecurityEventController::class)->group(function () {
     Route::get('/security-event', 'index')->name('admin.security_events.index');
-    Route::get('/security-event/create', 'create')->name('admin.security_events.create');
     Route::post('/security-event/store', 'store')->name('admin.security_events.store');
     Route::get('/security-event/edit/{id}', 'edit')->name('admin.security_events.edit');
-    Route::post('/security-event/update/{id}', 'update')->name('admin.security_events.update');
-    Route::post('/security-event/status/{id}', 'status')->name('admin.security_events.status');
-    Route::post('/security-event/destroy/{id}', 'destroy')->name('admin.security_events.destroy');
+    Route::post('/security-event/verify/{id}', 'verify')->name('admin.security_events.verify');
 });
 
 Route::controller(TrainingProgramController::class)->group(function () {
@@ -40,4 +38,8 @@ Route::controller(TrainingProgramController::class)->group(function () {
     Route::post('/training-program/update/{id}', 'update')->name('admin.training_programs.update');
     Route::post('/training-program/status/{id}', 'status')->name('admin.training_programs.status');
     Route::post('/training-program/destroy/{id}', 'destroy')->name('admin.training_programs.destroy');
+});
+
+Route::controller(TeamController::class)->group(function () {
+    Route::get('/team', 'index')->name('admin.team.index');
 });

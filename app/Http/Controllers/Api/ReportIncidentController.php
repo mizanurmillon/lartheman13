@@ -48,7 +48,7 @@ class ReportIncidentController extends Controller
             'location' => 'required|string|max:255',
             'alerts_types' => 'required|in:public,private',
             'incident_date' => 'required|date',
-            'incident_time' => 'required|date_format:H:i',
+            'incident_time' => 'required|date_format:H:i A',
             'file_url' => 'required|array',
             'file_url.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
         ]);

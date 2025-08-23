@@ -88,7 +88,7 @@
                         <span class="menu-title">Security Events</span>
                     </a>
                 </div>
-                <div class="menu-item">
+                {{--  <div class="menu-item">
                     <a class="menu-link" href="#">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
@@ -101,7 +101,7 @@
                         </span>
                         <span class="menu-title">Messages</span>
                     </a>
-                </div>
+                </div>  --}}
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.training_programs.*') ? 'active' : '' }}" href="{{ route('admin.training_programs.index') }}">
                         <span class="menu-icon">
@@ -120,7 +120,7 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link" href="#">
+                    <a class="menu-link " href="#">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -136,7 +136,7 @@
                         <span class="menu-title">Reports</span>
                     </a>
                 </div>
-                <div class="menu-item">
+                {{--  <div class="menu-item">
                     <a class="menu-link" href="#">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
@@ -151,9 +151,9 @@
                         </span>
                         <span class="menu-title">Assessments</span>
                     </a>
-                </div>
+                </div>  --}}
                 <div class="menu-item">
-                    <a class="menu-link" href="#">
+                    <a class="menu-link {{ request()->routeIs('admin.team.*') ? 'active' : '' }}" href="{{ route('admin.team.index') }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

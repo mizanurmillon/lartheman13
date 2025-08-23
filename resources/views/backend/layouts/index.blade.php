@@ -17,7 +17,7 @@
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="card-subtitle mb-2 text-muted">Total Incidents</h6>
-                            <h4 class="card-title fw-bold">69</h4>
+                            <h4 class="card-title fw-bold">{{ $totalLastFiveWeeksIncidents }}</h4>
                             <p class="text-muted small">+5 from last week</p>
                         </div>
                         <div>
@@ -32,7 +32,7 @@
                 <div class="card bg-primary text-white shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title fw-semibold">Report an Incident</h5>
-                        <a href="/events" class="btn btn-secondary w-100 mt-3">
+                        <a href="{{ route('admin.security_events.index') }}" class="btn btn-secondary w-100 mt-3">
                             <i class="bi bi-plus-circle me-2"></i> New Report
                         </a>
                     </div>
@@ -42,7 +42,7 @@
 
         <!-- Regional Events -->
         <div class="row mb-4">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">Regional Events</h5>
@@ -57,31 +57,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($latestIncidents as $incident)
                                     <tr>
-                                        <td>Vehicle Break-In</td>
-                                        <td><i class="bi bi-geo-alt me-1 text-muted"></i> New Hope Chapel</td>
-                                        <td>Reported 3 miles away.</td>
+                                        <td>{{ $incident->title }}</td>
+                                        <td><i class="bi bi-geo-alt me-1 text-muted"></i> {{ $incident->location }}</td>
+                                        <td>{{ $incident->description }}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Loitering</td>
-                                        <td><i class="bi bi-geo-alt me-1 text-muted"></i> Grace Fellowship</td>
-                                        <td>Reported 5 miles away.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Suspicious Package</td>
-                                        <td><i class="bi bi-geo-alt me-1 text-muted"></i> City Church</td>
-                                        <td>Unattended bag near entrance.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Vandalism</td>
-                                        <td><i class="bi bi-geo-alt me-1 text-muted"></i> Oak Ridge Community</td>
-                                        <td>Graffiti on main building.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Medical Emergency</td>
-                                        <td><i class="bi bi-geo-alt me-1 text-muted"></i> First Baptist</td>
-                                        <td>Paramedics called to service.</td>
-                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -89,7 +71,7 @@
                 </div>
             </div>
 
-            <!-- Regional Alerts Filter -->
+            {{--  <!-- Regional Alerts Filter -->
             <div class="col-lg-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -108,7 +90,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>  --}}
         </div>
 
         <!-- Incident Types Chart Placeholder -->
