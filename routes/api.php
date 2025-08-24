@@ -11,7 +11,11 @@ use App\Http\Controllers\Api\DynamicPageController;
 use App\Http\Controllers\Api\SitesettingController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\ChurchProfileController;
+use App\Http\Controllers\Api\Chat\GetMessageController;
 use App\Http\Controllers\Api\TrainingProgramController;
+use App\Http\Controllers\Api\Chat\SendMessageController;
+use App\Http\Controllers\Api\Chat\GetConversationController;
+
 
 
 /*
@@ -95,6 +99,10 @@ Route::group(['middleware' => ['jwt.verify']], function () {
         Route::post('/update-church-profile', 'updateChurchProfile');
     });
 
+    //Chat Route will be here
+    Route::post('/send-message', SendMessageController::class);
+    Route::get('/chat/messages', GetMessageController::class);
+    Route::get('/conversations', GetConversationController::class);
 
 });
 

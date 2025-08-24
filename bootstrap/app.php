@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
+        channels: __DIR__.'/../routes/channels.php',
         health: '/up',
         then: function () {
             Route::middleware('api')
@@ -50,6 +51,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'viewer' => ViewerMiddleware::class
         ]);
     })
+    ->withBroadcasting(__DIR__ . '/../routes/channels.php', ['prefix' => 'api', 'middleware' => ['jwt.verify']],)
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

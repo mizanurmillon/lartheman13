@@ -58,11 +58,11 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($latestIncidents as $incident)
-                                    <tr>
-                                        <td>{{ $incident->title }}</td>
-                                        <td><i class="bi bi-geo-alt me-1 text-muted"></i> {{ $incident->location }}</td>
-                                        <td>{{ $incident->description }}</td>
-                                    </tr>
+                                        <tr>
+                                            <td>{{ $incident->title }}</td>
+                                            <td><i class="bi bi-geo-alt me-1 text-muted"></i> {{ $incident->location }}</td>
+                                            <td>{{ $incident->description }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -115,6 +115,17 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script>
+            $(document).ready(function() {
+                Echo.private('chat-channel.' + 1).listen('MessageSentEvent', (e) => {
+                    console.log('Message Receiver:', e);
+                })
+
+                Echo.private('conversation-channel.' + 1).listen('ConversationEvent', (e) => {
+                    console.log('Conversation and Unread Message count:', e);
+                })
+
+            });
+
             document.addEventListener("DOMContentLoaded", function() {
                 const ctx = document.getElementById('incidentChart').getContext('2d');
 
@@ -149,7 +160,7 @@
                         maintainAspectRatio: false,
                         scales: {
                             x: {
-                                
+
                                 ticks: {
                                     display: false
                                 },
