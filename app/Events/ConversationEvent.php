@@ -22,7 +22,7 @@ class ConversationEvent implements ShouldBroadcastNow
     /**
      * Create a new event instance.
      */
-    public function __construct($senderId, $receiverId, $conversation)
+    public function __construct($senderId, $receiverId = null, $conversation)
     {
         $this->senderId = $senderId;
         $this->receiverId = $receiverId;

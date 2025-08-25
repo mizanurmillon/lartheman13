@@ -11,8 +11,10 @@ use App\Http\Controllers\Api\DynamicPageController;
 use App\Http\Controllers\Api\SitesettingController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\ChurchProfileController;
+use App\Http\Controllers\Api\Chat\GroupInfoController;
 use App\Http\Controllers\Api\Chat\GetMessageController;
 use App\Http\Controllers\Api\TrainingProgramController;
+use App\Http\Controllers\Api\Chat\CreateGroupController;
 use App\Http\Controllers\Api\Chat\SendMessageController;
 use App\Http\Controllers\Api\Chat\GetConversationController;
 
@@ -104,6 +106,15 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/chat/messages', GetMessageController::class);
     Route::get('/conversations', GetConversationController::class);
 
+    Route::group(['middleware' => ['leader']], function () {
+        Route::prefix('group')->group(function () {
+            Route::post('/create', CreateGroupController::class);
+        });
+    });
+
+    Route::prefix('group')->group(function () {
+        Route::get('/{id}/info', GroupInfoController::class);
+    });
 });
 
 Route::controller(TrainingProgramController::class)->group(function () {
@@ -113,4 +124,4 @@ Route::controller(TrainingProgramController::class)->group(function () {
 
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'categories');
-}); 
+});

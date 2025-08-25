@@ -11,7 +11,7 @@ class TeamMemberController extends Controller
 {
     use ApiResponse;
 
-    public function allTeamMembers()
+    public function allTeamMembers(Request $request)
     {
         $user = auth()->user();
 
@@ -27,10 +27,19 @@ class TeamMemberController extends Controller
         }
 
         // church_profile member role list 
-        $teamMembers = TeamMember::with('user:id,name,email,avatar')
+        $query = TeamMember::with('user:id,name,email,avatar')
             ->where('church_profile_id', $churchProfileId)
-            ->where('role', 'member')
-            ->get();
+            ->where('role', 'member');
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $teamMembers = $query->get();
 
         if ($teamMembers->isEmpty()) {
             return $this->error([], 'No members found in this church', 404);

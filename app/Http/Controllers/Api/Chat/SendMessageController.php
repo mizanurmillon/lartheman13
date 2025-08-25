@@ -48,14 +48,14 @@ class SendMessageController extends Controller
         $reply_to_message_id = $request->get('reply_to_message_id');
         $conversation = null;
         $messageType = null;
-
+        
         if ($message) {
             $messageType = 'text';
         }
-
+        
         // Conversation logic
         $conversation = $this->getConversation($user, $receiver_id, $conversation_id);
-
+        
         if (!$conversation) {
             return $this->error([], 'Conversation not found', 404);
         } else {
@@ -75,14 +75,16 @@ class SendMessageController extends Controller
                 'reply_to_message_id' => $reply_to_message_id ? $reply_to_message_id : null,
             ];
         }
-
+        
         $messageSend = Message::create($messageData);
         $conversation->touch();
-
+        
         $messageSend->load(['parentMessage', 'sender:id,name,avatar', 'receiver:id,name,avatar']);
 
+        // return ($messageSend);
         # Broadcast the message
         broadcast(new MessageSentEvent($messageSend));
+        
 
         # Broadcast the Conversation and Unread Message Count
         broadcast(new ConversationEvent($messageSend->sender_id, $messageSend->receiver_id, $messageSend))->toOthers();
@@ -133,26 +135,27 @@ class SendMessageController extends Controller
                 })
                 ->where('type', 'group')
                 ->first();
-
-            if (!$conversation) {
-                return false;
-            } else {
-                return $conversation;
-            }
-        } elseif ($receiver_id) {
-            $receiver = User::find($receiver_id);
-            if (!$receiver) {
-                return $this->error([], 'Receiver not found', 404);
-            }
-
-            if ($receiver->id === $user->id) {
-                $conversation = Conversation::whereHas('participants', function ($q) use ($user) {
-                    $q->where('participant_id', $user->id)
+                
+                // dd($conversation);
+                if (!$conversation) {
+                    return false;
+                } else {
+                    return $conversation;
+                }
+            } elseif ($receiver_id) {
+                $receiver = User::find($receiver_id);
+                if (!$receiver) {
+                    return $this->error([], 'Receiver not found', 404);
+                }
+                
+                if ($receiver->id === $user->id) {
+                    $conversation = Conversation::whereHas('participants', function ($q) use ($user) {
+                        $q->where('participant_id', $user->id)
                         ->where('participant_type', User::class);
-                })
+                    })
                     ->where('type', 'self')
                     ->first();
-
+                    
                 if (!$conversation) {
                     $conversation = Conversation::create([
                         'type' => 'self',

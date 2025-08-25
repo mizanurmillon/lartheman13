@@ -22,7 +22,7 @@ class MessageSentEvent implements ShouldBroadcastNow
      */
     public function __construct($data)
     {
-        $this->data = $data->load(['sender:id,name,avatar', 'receiver:id,name,avatar']);
+        $this->data = $data->load(['sender:id,name,avatar', 'receiver:id,name,avatar', 'conversation:id,type']);
     }
 
     /**
@@ -33,7 +33,7 @@ class MessageSentEvent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('chat-channel.' . $this->data->receiver->id),
+            new PrivateChannel('chat-channel.' . ($this->data->receiver->id ?? $this->data->conversation->id)),
         ];
     }
 }
