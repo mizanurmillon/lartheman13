@@ -43,6 +43,7 @@ class CreateGroupController extends Controller
                 'participant_id' => $id,
                 'participant_type' => get_class($user),
                 'role' => 'member',
+                'joined_at' => now(),
             ])
             ->toArray();
 

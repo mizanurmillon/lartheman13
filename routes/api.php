@@ -112,8 +112,12 @@ Route::group(['middleware' => ['jwt.verify']], function () {
         });
     });
 
-    Route::prefix('group')->group(function () {
-        Route::get('/{id}/info', GroupInfoController::class);
+
+    Route::controller(GroupInfoController::class)->group(function () {
+        Route::prefix('group')->group(function () {
+            Route::get('/{id}/info', 'groupInfo');
+            Route::get('/{id}/members', 'groupMember');
+        });
     });
 });
 

@@ -120,7 +120,7 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link " href="#">
+                    <a class="menu-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}" >
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

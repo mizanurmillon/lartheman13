@@ -18,6 +18,13 @@ class DashboardController extends Controller
             ->latest()
             ->take(5)
             ->get();
-        return view('backend.layouts.index', compact('totalLastFiveWeeksIncidents', 'latestIncidents'));
+
+        $categoryWiseIncidents = ReportIncident::with('category')
+            ->selectRaw('category_id, COUNT(*) as total')
+            ->groupBy('category_id')
+            ->limit(5)
+            ->get();
+
+        return view('backend.layouts.index', compact('totalLastFiveWeeksIncidents', 'latestIncidents', 'categoryWiseIncidents'));
     }
 }

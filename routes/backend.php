@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\Backend\FaqController;
 use App\Http\Controllers\Web\Backend\TeamController;
 use App\Http\Controllers\Web\Backend\CategoryController;
 use App\Http\Controllers\Web\Backend\DashboardController;
+use App\Http\Controllers\Web\Backend\ReportController;
 use App\Http\Controllers\Web\Backend\SecurityEventController;
 use App\Http\Controllers\Web\Backend\TrainingProgramController;
 
@@ -42,4 +43,8 @@ Route::controller(TrainingProgramController::class)->group(function () {
 
 Route::controller(TeamController::class)->group(function () {
     Route::get('/team', 'index')->name('admin.team.index');
+});
+
+Route::controller(ReportController::class)->group(function () {
+    Route::get('/reports', 'index')->name('admin.reports.index');
 });

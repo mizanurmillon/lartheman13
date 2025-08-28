@@ -129,25 +129,26 @@
             document.addEventListener("DOMContentLoaded", function() {
                 const ctx = document.getElementById('incidentChart').getContext('2d');
 
+                // PHP data → JavaScript variable
+                const categoryWiseData = @json($categoryWiseIncidents);
+
+                // labels & data prepare for Chart.js
+                const labels = categoryWiseData.map(item => item.category?.name ?? 'Unknown');
+                const data = categoryWiseData.map(item => item.total);
+
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: [
-                            'Suspicious Activity',
-                            'Theft/Burglary',
-                            'Vandalism',
-                            'Medical',
-                            'Other'
-                        ],
+                        labels: labels,
                         datasets: [{
                             label: 'Number of Incidents',
-                            data: [28, 15, 12, 9, 5], // Update with dynamic data if needed
+                            data: data,
                             backgroundColor: [
-                                '#e74c3c', // Suspicious
-                                '#f39c12', // Theft
-                                '#3498db', // Vandalism
-                                '#2ecc71', // Medical
-                                '#9b59b6' // Other
+                                '#e74c3c',
+                                '#f39c12',
+                                '#3498db',
+                                '#2ecc71',
+                                '#9b59b6'
                             ],
                             borderRadius: 6,
                             borderSkipped: false,
@@ -155,12 +156,11 @@
                         }]
                     },
                     options: {
-                        indexAxis: 'y', // Horizontal bar chart
+                        indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
                             x: {
-
                                 ticks: {
                                     display: false
                                 },

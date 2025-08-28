@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Chat;
 
 use App\Models\Group;
+use App\Models\Participant;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,42 +19,33 @@ class GroupInfoController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function __invoke(Request $request, int $id)
+    public function groupInfo(Request $request, int $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'nullable|string|max:255',
-        ]);
+        $user = auth()->user();
 
-        if ($validator->fails()) {
-            return $this->error($validator->errors(), $validator->errors()->first(), 422);
+        if (!$user) {
+            return $this->error([], 'Unauthorized', 401);
         }
 
-        $name = $request->input('name') ?? null;
-
-        $group = Group::query()
-            ->with([
-                'conversation.participants' => function ($query) use ($name) {
-                    $query->whereHas('participant', function ($q) use ($name) {
-                        $q->when($name, function ($q) use ($name) {
-                            $q->where('name', 'like', '%' . $name . '%');
-                        });
-                    })
-                        ->with([
-                            'participant' => function ($q) use ($name) {
-                                $q->select('id', 'name', 'avatar')
-                                    ->when($name, function ($q) use ($name) {
-                                        $q->where('name', 'like', '%' . $name . '%');
-                                    });
-                            }
-                        ]);
-                }
-            ])
-            ->find($id);
+        $group = Group::find($id);
 
 
         if (!$group) {
             return $this->error([], 'Group not found', 404);
         }
         return $this->success($group, 'Group info retrieved successfully', 200);
+    }
+
+    public function groupMember(Request $request, int $id)
+    {
+        $data = Participant::with('participant:id,name,email,avatar')
+            ->where('conversation_id', $id)
+            ->get();
+
+        if (!$data) {
+            return $this->error([], 'Group not found', 404);
+        }
+
+        return $this->success($data, 'Group members retrieved successfully', 200);
     }
 }
