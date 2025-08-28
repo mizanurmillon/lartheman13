@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Models\Media;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use App\Enum\NotificationType;
 use App\Models\ReportIncident;
 use App\Http\Controllers\Controller;
+use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
 
 class ReportIncidentController extends Controller
 {
@@ -15,10 +18,10 @@ class ReportIncidentController extends Controller
 
     public function allReports(Request $request)
     {
-        $query = ReportIncident::with('churchProfile:id,church_name,denomination,address','user:id,name','category:id,name', 'media')
-                            ->select('id','category_id','user_id','church_profile_id','title','description','location','incident_date','incident_time')
-                            ->where('status', 'approved')->where('alerts_types', 'public');
-                             
+        $query = ReportIncident::with('churchProfile:id,church_name,denomination,address', 'user:id,name', 'category:id,name', 'media')
+            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'title', 'description', 'location', 'incident_date', 'incident_time')
+            ->where('status', 'approved')->where('alerts_types', 'public');
+
         $data = $query->latest()->get();
 
         if (!$data) {
@@ -106,6 +109,16 @@ class ReportIncidentController extends Controller
         }
 
         $reportIncident->load('media');
+
+        $teamMembers = $reportIncident->churchProfile->teamMembers->map->user;
+
+        // Send notification to all related users
+        Notification::send($teamMembers, new UserNotification(
+            subject: 'New Report Incident',
+            message: 'A new report incident has been created',
+            channels: ['database'],
+            type: NotificationType::SUCCESS,
+        ));
 
         return $this->success($reportIncident, 'Report incident created successfully', 201);
     }

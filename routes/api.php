@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\SocialAuthController;
 use App\Http\Controllers\Api\SocialLinkController;
 use App\Http\Controllers\Api\DynamicPageController;
 use App\Http\Controllers\Api\SitesettingController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\ChurchProfileController;
 use App\Http\Controllers\Api\Chat\GroupInfoController;
@@ -99,6 +100,10 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::controller(ChurchProfileController::class)->group(function () {
         Route::get('/my-church-profile', 'churchProfile');
         Route::post('/update-church-profile', 'updateChurchProfile');
+    });
+
+    Route::controller(NotificationController::class)->group(function () {
+        Route::get('/notification', 'getNotification');
     });
 
     //Chat Route will be here
