@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AssignByVideoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ChurchController;
 use App\Http\Controllers\Api\MyScheduleController;
@@ -27,6 +28,10 @@ Route::group(['middleware' => ['jwt.verify']], function () {
         
         Route::controller(MyScheduleController::class)->group(function () {
             Route::get('/my-schedule', 'index');
+        });
+
+        Route::controller(AssignByVideoController::class)->group(function () {
+            Route::get('/assign-by-video', 'assignByVideo');
         });
 
     });

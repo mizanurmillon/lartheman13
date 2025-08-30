@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ChurchController;
-use App\Http\Controllers\Api\ReportIncidentController;
-use App\Http\Controllers\Api\RequestReportIncidentController;
 use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\TeamMemberController;
+use App\Http\Controllers\Api\AssignedVideoController;
+use App\Http\Controllers\Api\ReportIncidentController;
+use App\Http\Controllers\Api\RequestReportIncidentController;
 
 Route::group(['middleware' => ['jwt.verify']], function () {
 
@@ -32,6 +33,12 @@ Route::group(['middleware' => ['jwt.verify']], function () {
            Route::get('/get-schedule/{id}', 'singleSchedule');
            Route::get('/upcoming-schedule', 'upcomingSchedule');
            Route::delete('/delete-schedule/{id}', 'deleteSchedule');
+        });
+
+        Route::controller(AssignedVideoController::class)->group(function () {
+            Route::post('/assign-video', 'assignVideo');
+            Route::get('/assigned-videos', 'allAssignedVideos');
+            Route::get('/assigned-videos/{id}', 'singleAssignedVideo');
         });
     });
 
