@@ -19,6 +19,62 @@
             </div>
         </div>
         <!-- Incident Types Chart Placeholder -->
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <form action="{{ route('admin.reports.index') }}" method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <select name="category_id" class="form-select">
+                            <option value="">All Categories</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <select name="incident_type_id" class="form-select">
+                            <option value="">All Incident Types</option>
+                            @foreach($incidentTypes as $type)
+                                <option value="{{ $type->id }}" {{ request('incident_type_id') == $type->id ? 'selected' : '' }}>
+                                    {{ $type->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <select name="location_id" class="form-select">
+                            <option value="">All Locations</option>
+                            @foreach($locations as $location)
+                                <option value="{{ $location->id }}" {{ request('location_id') == $location->id ? 'selected' : '' }}>
+                                    {{ $location->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- <div class="col-md-3">
+                        <select name="church_profile_id" class="form-select">
+                            <option value="">All Churches</option>
+                            @foreach($churches as $church)
+                                <option value="{{ $church->id }}" {{ request('church_profile_id') == $church->id ? 'selected' : '' }}>
+                                    {{ $church->church_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div> --}}
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <a href="{{ route('admin.reports.index') }}" class="btn btn-danger">Reset</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-12">
                 <div class="card shadow-sm">
@@ -40,7 +96,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 Echo.private('chat-channel.' + 1).listen('MessageSentEvent', (e) => {
                     console.log('Message Receiver:', e);
                 })
@@ -51,7 +107,7 @@
 
             });
 
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 const ctx = document.getElementById('incidentChart').getContext('2d');
 
                 // PHP data → JavaScript variable
