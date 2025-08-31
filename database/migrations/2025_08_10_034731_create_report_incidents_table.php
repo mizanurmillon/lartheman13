@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('church_profile_id')->nullable()->constrained('church_profiles')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('title');
-            $table->string('description');
+            $table->text('description');
             $table->string('location');
             $table->enum('alerts_types', ['public', 'private'])->default('public');
             $table->date('incident_date');

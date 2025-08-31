@@ -51,7 +51,8 @@
                             <table class="table table-hover table-bordered">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Event Type</th>
+                                        <th>Event Category</th>
+                                        <th>Incident Type</th>
                                         <th>Location</th>
                                         <th>Details</th>
                                     </tr>
@@ -59,9 +60,10 @@
                                 <tbody>
                                     @foreach ($latestIncidents as $incident)
                                         <tr>
-                                            <td>{{ $incident->title }}</td>
-                                            <td><i class="bi bi-geo-alt me-1 text-muted"></i> {{ $incident->location }}</td>
-                                            <td>{{ $incident->description }}</td>
+                                            <td>{{ $incident->category ? $incident->category->name : 'N/A' }}</td>
+                                            <td>{{ $incident->incidentType ? $incident->incidentType->name : ($incident->incident_type_other ?? 'N/A') }}</td>
+                                            <td><i class="bi bi-geo-alt me-1 text-muted"></i> {{ $incident->location->name ?? 'N/A' }}</td>
+                                            <td>{{ Str::limit($incident->description, 100) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -71,7 +73,7 @@
                 </div>
             </div>
 
-            {{--  <!-- Regional Alerts Filter -->
+            {{-- <!-- Regional Alerts Filter -->
             <div class="col-lg-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -79,8 +81,7 @@
                         <p class="text-muted small">Adjust the distance to see incidents from nearby churches.</p>
 
                         <label for="distanceRange" class="form-label">Distance: 10 miles</label>
-                        <input type="range" class="form-range" id="distanceRange" min="0" max="20"
-                            value="10">
+                        <input type="range" class="form-range" id="distanceRange" min="0" max="20" value="10">
 
                         <div class="alert alert-success mt-3 p-2">
                             <strong>2 new</strong> "Suspicious Vehicle" reports within 10 miles in the last 48 hours.
@@ -90,7 +91,7 @@
                         </div>
                     </div>
                 </div>
-            </div>  --}}
+            </div> --}}
         </div>
 
         <!-- Incident Types Chart Placeholder -->
@@ -115,7 +116,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 Echo.private('chat-channel.' + 1).listen('MessageSentEvent', (e) => {
                     console.log('Message Receiver:', e);
                 })
@@ -126,7 +127,7 @@
 
             });
 
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 const ctx = document.getElementById('incidentChart').getContext('2d');
 
                 // PHP data → JavaScript variable

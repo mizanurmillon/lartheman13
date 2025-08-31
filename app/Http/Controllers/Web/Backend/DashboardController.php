@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $totalLastFiveWeeksIncidents = ReportIncident::where('created_at', '>=', now()->subWeeks(5))
             ->count();
 
-        $latestIncidents = ReportIncident::with(['user', 'churchProfile', 'category', 'media'])
+        $latestIncidents = ReportIncident::with(['user', 'churchProfile', 'category', 'media', 'incidentType', 'location'])
             ->latest()
             ->take(5)
             ->get();

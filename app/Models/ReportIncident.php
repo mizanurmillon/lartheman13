@@ -39,4 +39,14 @@ class ReportIncident extends Model
     {
         return $this->hasMany(Media::class);
     }
+
+    public function incidentType()
+    {
+        return $this->belongsTo(IncidentType::class);
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
 }
