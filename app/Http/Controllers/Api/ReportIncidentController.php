@@ -18,8 +18,8 @@ class ReportIncidentController extends Controller
 
     public function allReports(Request $request)
     {
-        $query = ReportIncident::with('churchProfile:id,church_name,denomination,address', 'user:id,name', 'category:id,name', 'media')
-            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'title', 'description', 'location', 'incident_date', 'incident_time')
+        $query = ReportIncident::with('churchProfile:id,church_name,denomination,address', 'user:id,name', 'category:id,name', 'incidentType:id,name', 'location:id,name','media')
+            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'incident_type_id', 'description', 'location_id', 'incident_date', 'incident_time')
             ->where('status', 'approved')->where('alerts_types', 'public');
 
         $data = $query->latest()->get();
@@ -32,8 +32,8 @@ class ReportIncidentController extends Controller
 
     public function singleReport($id)
     {
-        $data = ReportIncident::with('churchProfile:id,church_name,denomination,address', 'user:id,name,avatar', 'category:id,name', 'media')
-            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'title', 'description', 'location', 'incident_date', 'incident_time', 'alerts_types', 'status')
+        $data = ReportIncident::with('churchProfile:id,church_name,denomination,address', 'user:id,name,avatar', 'category:id,name','incidentType:id,name','location:id,name','media')
+            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'incident_type_id', 'description', 'location_id', 'incident_date', 'incident_time', 'alerts_types', 'status')
             ->where('id', $id)
             ->first();
         if (!$data) {
@@ -46,9 +46,9 @@ class ReportIncidentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
+            'incident_type_id' => 'required|exists:incident_types,id',
             'description' => 'required|string|max:2000',
-            'location' => 'required|string|max:255',
+            'location_id' => 'required|exists:locations,id',
             'alerts_types' => 'required|in:public,private',
             'incident_date' => 'required|date',
             'incident_time' => 'required|date_format:H:i',
@@ -77,9 +77,9 @@ class ReportIncidentController extends Controller
             'user_id'          => $user->id,
             'church_profile_id' => $teamMember->church_profile_id,
             'category_id'      => $request->category_id,
-            'title'            => $request->title,
+            'incident_type_id' => $request->incident_type_id,
             'description'      => $request->description,
-            'location'         => $request->location,
+            'location_id'      => $request->location_id,
             'alerts_types'     => $request->alerts_types,
             'incident_date'    => $request->incident_date,
             'incident_time'    => $request->incident_time,
@@ -137,8 +137,8 @@ class ReportIncidentController extends Controller
             return $this->error([], 'User is not a member of any team', 404);
         }
 
-        $data = ReportIncident::with('churchProfile:id,church_name,denomination,address', 'user:id,name', 'category:id,name', 'media')
-            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'title', 'description', 'location', 'incident_date', 'incident_time', 'alerts_types', 'status')
+        $data = ReportIncident::with('churchProfile:id,church_name,denomination,address', 'user:id,name', 'category:id,name','incidentType:id,name','location:id,name', 'media')
+            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'incident_type_id', 'description', 'location_id', 'incident_date', 'incident_time', 'alerts_types', 'status')
             ->where('church_profile_id', $teamMember->church_profile_id);
 
         $data = $data->latest()->get();

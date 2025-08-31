@@ -17,4 +17,9 @@ class Category extends Model
     protected $casts = [
         'id' => 'integer',
     ];
+
+    public function IncidentTypes()
+    {
+        return $this->hasMany(IncidentType::class, 'category_id', 'id');
+    }
 }

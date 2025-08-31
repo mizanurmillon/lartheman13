@@ -57,7 +57,6 @@ class SecurityEventController extends Controller
         $categories = Category::where('status', 'active')->latest()->get();
         $locations  = Location::latest()->get();
         $verified   = ReportIncident::with('media', 'incidentType', 'category')
-            ->where('user_id', auth()->user()->id)
             ->where('status', 'approved')
             ->latest()
             ->get();

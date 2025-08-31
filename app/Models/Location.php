@@ -12,4 +12,13 @@ class Location extends Model
     {
         return $this->hasMany(ReportIncident::class);
     }
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
+    protected $casts = [
+        'id' => 'integer',
+    ];
 }

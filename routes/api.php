@@ -133,4 +133,5 @@ Route::controller(TrainingProgramController::class)->group(function () {
 
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'categories');
+    Route::get('/location', 'location');
 });
