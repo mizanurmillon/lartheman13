@@ -18,7 +18,9 @@ class DatabaseSeeder extends Seeder
         $this->call(SystemSettingSeeder::class);
         $this->call(DynamicPageSeeder::class);
         // $this->call(FaqSeeder::class);
-        $this->call(CategoryTableSeeder::class);
+        // $this->call(CategoryTableSeeder::class);
         $this->call(TrainingProgramTableSeeder::class);
+        $this->call(IncidentTypeSeeder::class);
+        $this->call(LocationSeeder::class);
     }
 }

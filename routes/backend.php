@@ -29,7 +29,11 @@ Route::controller(SecurityEventController::class)->group(function () {
     Route::post('/security-event/store', 'store')->name('admin.security_events.store');
     Route::get('/security-event/edit/{id}', 'edit')->name('admin.security_events.edit');
     Route::post('/security-event/verify/{id}', 'verify')->name('admin.security_events.verify');
+
+    // AJAX route
+    Route::get('/incident-types/by-category', 'getIncidentTypes')->name('admin.incident_types.by_category');
 });
+
 
 Route::controller(TrainingProgramController::class)->group(function () {
     Route::get('/training-program', 'index')->name('admin.training_programs.index');
