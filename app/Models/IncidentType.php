@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class IncidentType extends Model
 {
     protected $guarded = [];
-
+    protected $casts = [
+        'share_regionally' => 'boolean',
+    ];
     public function category()
     {
         return $this->belongsTo(Category::class);

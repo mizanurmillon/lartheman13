@@ -50,13 +50,14 @@
                     </div>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}"  href="{{ route('admin.categories.index') }}">
+                    <a class="menu-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}"
+                        href="{{ route('admin.categories.index') }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="1"
-                                    stroke-linecap="round" stroke-linejoin="round">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="#000000" stroke-width="1" stroke-linecap="round"
+                                    stroke-linejoin="round">
                                     <path d="M4 4h6v6h-6z" />
                                     <path d="M14 4h6v6h-6z" />
                                     <path d="M4 14h6v6h-6z" />
@@ -65,17 +66,55 @@
 
                             </i>
                         </span>
-                        <span class="menu-title">Categories</span>
+                        <span class="menu-title">Event Categories</span>
                     </a>
                 </div>
+
                 <div class="menu-item">
-                    <a class="menu-link {{ request()->routeIs('admin.security_events.*') ? 'active' : '' }}" href="{{ route('admin.security_events.index') }}">
+                    <a class="menu-link {{ request()->routeIs('admin.incident_types.*') ? 'active' : '' }}"
+                        href="{{ route('admin.incident_types.index') }}">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-warning fs-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="#000000" stroke-width="1" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M12 2L2 22h20L12 2z" />
+                                    <path d="M12 16h.01" />
+                                    <path d="M12 10h.01" />
+                                </svg>
+                            </i>
+                        </span>
+                        <span class="menu-title">Incident Types</span>
+                    </a>
+                </div>
+
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->routeIs('admin.locations.*') ? 'active' : '' }}"
+                        href="{{ route('admin.locations.index') }}">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-map fs-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="#000000" stroke-width="1" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M3 6l9-4l9 4v14l-9 4l-9-4V6z" />
+                                    <path d="M9 9h6v6H9z" />
+                                </svg>
+                            </i>
+                        </span>
+                        <span class="menu-title">Locations</span>
+                    </a>
+                </div>
+
+
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->routeIs('admin.security_events.*') ? 'active' : '' }}"
+                        href="{{ route('admin.security_events.index') }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-alert">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-shield-alert">
                                     <path
                                         d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
                                     </path>
@@ -88,27 +127,28 @@
                         <span class="menu-title">Security Events</span>
                     </a>
                 </div>
-                {{--  <div class="menu-item">
+                {{-- <div class="menu-item">
                     <a class="menu-link" href="#">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-message-square">
                                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                 </svg>
                             </i>
                         </span>
                         <span class="menu-title">Messages</span>
                     </a>
-                </div>  --}}
+                </div> --}}
                 <div class="menu-item">
-                    <a class="menu-link {{ request()->routeIs('admin.training_programs.*') ? 'active' : '' }}" href="{{ route('admin.training_programs.index') }}">
+                    <a class="menu-link {{ request()->routeIs('admin.training_programs.*') ? 'active' : '' }}"
+                        href="{{ route('admin.training_programs.index') }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-book-open">
                                     <path d="M12 7v14"></path>
                                     <path
                                         d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z">
@@ -120,13 +160,13 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}" >
+                    <a class="menu-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}"
+                        href="{{ route('admin.reports.index') }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="lucide lucide-chart-no-axes-column-increasing">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-chart-no-axes-column-increasing">
                                     <line x1="12" x2="12" y1="20" y2="10"></line>
                                     <line x1="18" x2="18" y1="20" y2="4"></line>
                                     <line x1="6" x2="6" y1="20" y2="16"></line>
@@ -136,13 +176,13 @@
                         <span class="menu-title">Reports</span>
                     </a>
                 </div>
-                {{--  <div class="menu-item">
+                {{-- <div class="menu-item">
                     <a class="menu-link" href="#">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-file-check">
                                     <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
                                     <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
                                     <path d="m9 15 2 2 4-4"></path>
@@ -151,14 +191,15 @@
                         </span>
                         <span class="menu-title">Assessments</span>
                     </a>
-                </div>  --}}
+                </div> --}}
                 <div class="menu-item">
-                    <a class="menu-link {{ request()->routeIs('admin.team.*') ? 'active' : '' }}" href="{{ route('admin.team.index') }}">
+                    <a class="menu-link {{ request()->routeIs('admin.team.*') ? 'active' : '' }}"
+                        href="{{ route('admin.team.index') }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-users">
                                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="9" cy="7" r="4"></circle>
                                     <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -174,7 +215,7 @@
                         <div class="mx-1 my-2 separator"></div>
                     </div>
                 </div>
-                {{--  <div class="menu-item">
+                {{-- <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}"
                         href="{{ route('admin.faqs.index') }}">
                         <span class="menu-icon">
@@ -190,7 +231,7 @@
                         </span>
                         <span class="menu-title">FAQ</span>
                     </a>
-                </div>  --}}
+                </div> --}}
 
                 <div data-kt-menu-trigger="click"
                     class="menu-item {{ request()->routeIs(['profile.setting', 'stripe.setting', 'paypal.setting', 'dynamic_page.*', 'system.index', 'mail.setting', 'social.index']) ? 'active show' : '' }} menu-accordion">
@@ -238,7 +279,7 @@
                                 <span class="menu-title">Mail Setting</span>
                             </a>
                         </div>
-                        {{--  <div class="menu-item">
+                        {{-- <div class="menu-item">
                             <a href="{{ route('social.index') }}"
                                 class="menu-link {{ request()->routeIs('social.index') ? 'active' : '' }}">
                                 <span class="menu-bullet">
@@ -246,7 +287,7 @@
                                 </span>
                                 <span class="menu-title">Social Media</span>
                             </a>
-                        </div>  --}}
+                        </div> --}}
                     </div>
                 </div>
             </div>
