@@ -17,8 +17,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="h3 fw-bold">Category</h1>
-                    <p class="text-muted mb-0">View and manage categories.</p>
+                    <h1 class="h3 fw-bold">Event Category</h1>
+                    <p class="text-muted mb-0">View and manage event categories.</p>
                 </div>
             </div>
             <!--end::Info-->
@@ -32,7 +32,7 @@
                 <div class="col-12">
                     <div class="bg-white p-5">
                         <div class="d-flex justify-content-start mb-5">
-                            <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Add Category</a>
+                            <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Add Event Category</a>
                         </div>
                         <div class="table-wrapper table-responsive mt-5">
                             <table id="data-table" class="table table-bordered mt-5">

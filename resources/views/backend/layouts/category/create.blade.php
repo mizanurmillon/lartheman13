@@ -17,8 +17,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="h3 fw-bold">Category Add</h1>
-                    <p class="text-muted mb-0">Add and manage categories.</p>
+                    <h1 class="h3 fw-bold">Event Category Add</h1>
+                    <p class="text-muted mb-0">Add and manage event categories.</p>
                 </div>
             </div>
             <!--end::Info-->
@@ -31,15 +31,15 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-body">
-                        <h1 class="mb-4">Add Category</h1>
+                        <h1 class="mb-4">Add Event Category</h1>
                         <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <div class="mt-4">
-                                <label for="name" class="form-label">Category Name</label>
+                                <label for="name" class="form-label">Event Category Name</label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror"
                                     name="name" id="name" value="{{ old('name') }}"
-                                    placeholder="Enter Category Name" />
+                                    placeholder="Enter Event Category Name" />
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

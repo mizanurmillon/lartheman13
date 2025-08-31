@@ -5,6 +5,8 @@ use App\Http\Controllers\Web\Backend\FaqController;
 use App\Http\Controllers\Web\Backend\TeamController;
 use App\Http\Controllers\Web\Backend\CategoryController;
 use App\Http\Controllers\Web\Backend\DashboardController;
+use App\Http\Controllers\Web\Backend\IncidentTypeController;
+use App\Http\Controllers\Web\Backend\LocationController;
 use App\Http\Controllers\Web\Backend\ReportController;
 use App\Http\Controllers\Web\Backend\SecurityEventController;
 use App\Http\Controllers\Web\Backend\TrainingProgramController;
@@ -24,13 +26,30 @@ Route::controller(CategoryController::class)->group(function () {
     Route::post('/category/destroy/{id}', 'destroy')->name('admin.categories.destroy');
 });
 
+Route::controller(IncidentTypeController::class)->group(function () {
+    Route::get('/incident-type', 'index')->name('admin.incident_types.index');
+    Route::get('/incident-type/create', 'create')->name('admin.incident_types.create');
+    Route::post('/incident-type/store', 'store')->name('admin.incident_types.store');
+    Route::get('/incident-type/edit/{id}', 'edit')->name('admin.incident_types.edit');
+    Route::post('/incident-type/update/{id}', 'update')->name('admin.incident_types.update');
+    Route::post('/incident-type/toggle-share/{id}', 'toggleShare')->name('admin.incident_types.toggleShare');
+    Route::post('/incident-type/destroy/{id}', 'destroy')->name('admin.incident_types.destroy');
+});
+
+Route::controller(LocationController::class)->group(function () {
+    Route::get('/location', 'index')->name('admin.locations.index');
+    Route::get('/location/create', 'create')->name('admin.locations.create');
+    Route::post('/location/store', 'store')->name('admin.locations.store');
+    Route::get('/location/edit/{id}', 'edit')->name('admin.locations.edit');
+    Route::post('/location/update/{id}', 'update')->name('admin.locations.update');
+    Route::post('/location/destroy/{id}', 'destroy')->name('admin.locations.destroy');
+});
+
 Route::controller(SecurityEventController::class)->group(function () {
     Route::get('/security-event', 'index')->name('admin.security_events.index');
     Route::post('/security-event/store', 'store')->name('admin.security_events.store');
     Route::get('/security-event/edit/{id}', 'edit')->name('admin.security_events.edit');
     Route::post('/security-event/verify/{id}', 'verify')->name('admin.security_events.verify');
-
-    // AJAX route
     Route::get('/incident-types/by-category', 'getIncidentTypes')->name('admin.incident_types.by_category');
 });
 

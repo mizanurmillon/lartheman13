@@ -17,8 +17,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="h3 fw-bold">Category Edit</h1>
-                    <p class="text-muted mb-0">Edit and Update categories.</p>
+                    <h1 class="h3 fw-bold">Event Category Edit</h1>
+                    <p class="text-muted mb-0">Edit and Update event categories.</p>
                 </div>
             </div>
             <!--end::Info-->
@@ -36,9 +36,9 @@
                             @csrf
 
                             <div class="mt-4">
-                                <label for="name" class="form-label">Category Name</label>
+                                <label for="name" class="form-label">Event Category Name</label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    name="name" id="name" value="{{ $category->name ?? old('name') }}" placeholder="Enter Category Name" />
+                                    name="name" id="name" value="{{ $category->name ?? old('name') }}" placeholder="Enter Event Category Name" />
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
