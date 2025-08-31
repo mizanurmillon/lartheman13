@@ -1,6 +1,31 @@
 @extends('backend.app')
 @section('title', 'Incident Types')
 @section('content')
+
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar">
+        <div class=" container-fluid  d-flex flex-stack flex-wrap flex-sm-nowrap">
+            <!--begin::Info-->
+            <div class="d-flex align-items-start gap-3 mb-8">
+                <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"viewBox="0 0 24 24" fill="none"
+                        stroke="#267fd9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-shield-alert">
+                        <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+                        <path d="M12 8v4" />
+                        <path d="M12 16h.01" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="h3 fw-bold">Incident Types</h1>
+                    <p class="text-muted mb-0">View and manage incident types.</p>
+                </div>
+                </div>
+            </div>
+            <!--end::Info-->
+        </div>
+    </div>
+    <!--end::Toolbar-->
     <section>
         <div class="container-fluid">
             <div class="bg-white p-5">
@@ -39,10 +64,10 @@
 
                         language: {
                             processing: `<div class="text-center">
-                                        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                        </div>`
+                                                                <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                                                                <span class="visually-hidden">Loading...</span>
+                                                            </div>
+                                                                </div>`
                         },
                         ajax: { url: "{{ route('admin.incident_types.index') }}", type: "GET" },
                         columns: [
