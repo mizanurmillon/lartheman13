@@ -59,7 +59,18 @@
                             </div>
 
                             <div class="mt-4">
-                                <label for="video" class="form-label">Video</label>
+                                <label for="file_url" class="form-label">Upload File (pdf & docx)</label>
+                                <input type="file" class="form-control @error('file_url') is-invalid @enderror"
+                                    name="file_url" id="file_url" value="{{ old('file_url') }}" placeholder="Enter File" accept="file_url/*" />
+                                @error('file_url')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="mt-4">
+                                <label for="video" class="form-label">Upload Video</label>
                                 <input type="file" class="form-control @error('video') is-invalid @enderror"
                                     name="video" id="video" value="{{ old('video') }}" placeholder="Enter Video" accept="video/*" />
                                 @error('video')

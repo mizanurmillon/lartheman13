@@ -33,6 +33,13 @@ class TrainingProgramController extends Controller
                             Your browser does not support the video tag.
                         </video>';
                 })
+                ->addColumn('file_url', function ($data) {
+                    $file = $data->file_url;
+                    if (!$file) {
+                        return 'No File';
+                    }
+                    return '<a href="' . asset($file) . '" target="_blank">' . $file . '</a>';
+                })
                 ->addColumn('status', function ($data) {
                     $status = ' <div class="form-check form-switch">';
                     $status .= ' <input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
@@ -53,7 +60,7 @@ class TrainingProgramController extends Controller
                                 </a>
                             </div>';
                 })
-                ->rawColumns(['description', 'status', 'action', 'video'])
+                ->rawColumns(['description', 'status', 'action', 'video', 'file_url'])
                 ->make();
         }
         return view('backend.layouts.training_programs.index');
@@ -70,6 +77,7 @@ class TrainingProgramController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:2550',
             'video' => 'required|mimetypes:video/mp4,video/ogg,video/webm|max:512000',
+            'file_url' => 'nullable|mimes:pdf,doc,docx|max:5120',
         ]);
 
         if ($request->hasFile('video')) {
@@ -77,14 +85,19 @@ class TrainingProgramController extends Controller
             $videoName                    = uploadImage($video, 'training_programs');
         }
 
+        if ($request->hasFile('file_url')) {
+            $file_url                    = $request->file('file_url');
+            $fileName                    = uploadImage($file_url, 'training_programs');
+        }
+
         $training_program = TrainingProgram::create([
             'title' => $request->title,
             'description' => $request->description,
             'video' => $videoName,
+            'file_url' => $fileName ?? null,
         ]);
 
-        if(!$training_program)
-        {
+        if (!$training_program) {
             return redirect()->route('admin.training_programs.index')->with('t-error', 'Training Program not created successfully');
         }
 
@@ -103,13 +116,13 @@ class TrainingProgramController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:2550',
             'video' => 'mimetypes:video/mp4,video/ogg,video/webm|max:512000',
+            'file_url' => 'nullable|mimes:pdf,doc,docx|max:5120',
         ]);
-        
+
         $training_program = TrainingProgram::findOrFail($id);
-        
+
         if ($request->hasFile('video')) {
-            if($training_program->video)
-            {
+            if ($training_program->video) {
                 $previousImagePath = public_path($training_program->video);
                 if (file_exists($previousImagePath)) {
                     unlink($previousImagePath);
@@ -117,20 +130,36 @@ class TrainingProgramController extends Controller
             }
             $video                        = $request->file('video');
             $videoName                    = uploadImage($video, 'training_programs');
-        }else{
+        } else {
             $videoName = $training_program->video;
+        }
+
+        if ($request->hasFile('file_url')) {
+            if ($training_program->file_url) {
+                $previousFilePath = public_path($training_program->file_url);
+                if (file_exists($previousFilePath)) {
+                    unlink($previousFilePath);
+                }
+            }
+            $file_url                        = $request->file('file_url');
+            $fileName                    = uploadImage($file_url, 'training_programs');
+            $training_program->file_url = $fileName;
+        }else{
+            $fileName = $training_program->file_url;
         }
 
         $training_program->update([
             'title' => $request->title,
             'description' => $request->description,
             'video' => $videoName,
+            'file_url' => $fileName ?? null,
         ]);
 
         return redirect()->route('admin.training_programs.index')->with('t-success', 'Training Program updated successfully');
     }
 
-    public function status(int $id): JsonResponse {
+    public function status(int $id): JsonResponse
+    {
         $data = TrainingProgram::findOrFail($id);
         if ($data->status == 'inactive') {
             $data->status = 'active';
@@ -153,15 +182,22 @@ class TrainingProgramController extends Controller
         }
     }
 
-    public function destroy(int $id): JsonResponse {
+    public function destroy(int $id): JsonResponse
+    {
 
         $data = TrainingProgram::findOrFail($id);
 
-        if($data->video)
-        {
+        if ($data->video) {
             $previousImagePath = public_path($data->video);
             if (file_exists($previousImagePath)) {
                 unlink($previousImagePath);
+            }
+        }
+
+        if ($data->file_url) {
+            $previousFilePath = public_path($data->file_url);
+            if (file_exists($previousFilePath)) {
+                unlink($previousFilePath);
             }
         }
 

@@ -41,6 +41,7 @@
                                         <th>#</th>
                                         <th>Title</th>
                                         <th>Description</th>
+                                        <th>File</th>
                                         <th>Video</th>
                                         <th>Status</th>
                                         <th class="text-center">Actions</th>
@@ -113,6 +114,12 @@
                                 name: 'description',
                                 orderable: true,
                                 searchable: true
+                            },
+                            {
+                                data: 'file_url',
+                                name: 'file_url',
+                                orderable: false,
+                                searchable: false
                             },
                             {
                                 data: 'video',

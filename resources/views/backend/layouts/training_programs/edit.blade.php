@@ -58,6 +58,19 @@
                                     </span>
                                 @enderror
                             </div>
+                            <div class="mt-4">
+                                <label for="file_url" class="form-label">Upload File (pdf & docx)</label>
+                                <input type="file" class="form-control @error('file_url') is-invalid @enderror"
+                                    name="file_url" id="file_url" value="{{ old('file_url') }}" placeholder="Enter File" accept="file_url/*" />
+                                @if($data->file_url)
+                                    <a href="{{ asset($data->file_url) }}" target="_blank" class="mt-2 d-block">View Current File</a>
+                                @endif
+                                @error('file_url')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
 
                             <div class="mt-4">
                                 <label for="video" class="form-label">Video</label>
