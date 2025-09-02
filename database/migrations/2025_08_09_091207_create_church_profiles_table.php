@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('church_profiles', function (Blueprint $table) {
             $table->id();
+            $table->string('unique_id')->nullable()->unique();
             $table->string('church_name')->nullable();
+            $table->string('user_name')->nullable()->unique();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('denomination')->nullable();
