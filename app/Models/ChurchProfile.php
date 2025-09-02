@@ -22,4 +22,5 @@ class ChurchProfile extends Model
     {
         return $this->hasMany(TeamMember::class);
     }
+
 }

@@ -26,8 +26,9 @@
                     <div class="col-md-3">
                         <select name="category_id" class="form-select">
                             <option value="">All Categories</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}"
+                                    {{ request('category_id') == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}
                                 </option>
                             @endforeach
@@ -37,8 +38,9 @@
                     <div class="col-md-3">
                         <select name="incident_type_id" class="form-select">
                             <option value="">All Incident Types</option>
-                            @foreach($incidentTypes as $type)
-                                <option value="{{ $type->id }}" {{ request('incident_type_id') == $type->id ? 'selected' : '' }}>
+                            @foreach ($incidentTypes as $type)
+                                <option value="{{ $type->id }}"
+                                    {{ request('incident_type_id') == $type->id ? 'selected' : '' }}>
                                     {{ $type->name }}
                                 </option>
                             @endforeach
@@ -48,8 +50,9 @@
                     <div class="col-md-3">
                         <select name="location_id" class="form-select">
                             <option value="">All Locations</option>
-                            @foreach($locations as $location)
-                                <option value="{{ $location->id }}" {{ request('location_id') == $location->id ? 'selected' : '' }}>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}"
+                                    {{ request('location_id') == $location->id ? 'selected' : '' }}>
                                     {{ $location->name }}
                                 </option>
                             @endforeach
@@ -59,7 +62,7 @@
                     {{-- <div class="col-md-3">
                         <select name="church_profile_id" class="form-select">
                             <option value="">All Churches</option>
-                            @foreach($churches as $church)
+                            @foreach ($churches as $church)
                                 <option value="{{ $church->id }}" {{ request('church_profile_id') == $church->id ? 'selected' : '' }}>
                                     {{ $church->church_name }}
                                 </option>
@@ -96,7 +99,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 Echo.private('chat-channel.' + 1).listen('MessageSentEvent', (e) => {
                     console.log('Message Receiver:', e);
                 })
@@ -107,14 +110,18 @@
 
             });
 
-            document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function() {
                 const ctx = document.getElementById('incidentChart').getContext('2d');
-
-                // PHP data → JavaScript variable
                 const categoryWiseData = @json($categoryWiseIncidents);
+                console.log(categoryWiseData);
 
-                // labels & data prepare for Chart.js
-                const labels = categoryWiseData.map(item => item.category?.name ?? 'Unknown');
+                const labels = categoryWiseData.map(item => {
+                    const categoryName = item.category?.name ?? 'Unknown';
+                    const churchName = item.church_profile.church_name ?? 'Unknown Church';
+                    const uniqueId = item.church_profile.unique_id ?? 'N/A';
+                    return `${categoryName} - ${churchName} (${uniqueId})`;
+                });
+
                 const data = categoryWiseData.map(item => item.total);
 
                 new Chart(ctx, {
@@ -163,7 +170,12 @@
                                 display: false
                             },
                             tooltip: {
-                                enabled: true
+                                enabled: true,
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` Incidents: ${context.raw}`;
+                                    }
+                                }
                             }
                         }
                     }

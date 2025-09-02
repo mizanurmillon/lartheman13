@@ -97,17 +97,18 @@
                                 <th>Status & Actions</th>
                             </tr>
                         </thead>
-                        <tbody>                            
+                        <tbody>
                             @foreach ($verified as $event)
                                 <tr>
                                     <td>{{ $event->category ? $event->category->name : 'N/A' }}</td>
-                                    <td>{{ $event->incidentType ? $event->incidentType->name : ($event->incident_type_other ?? 'N/A') }}</td>
+                                    <td>{{ $event->incidentType ? $event->incidentType->name : $event->incident_type_other ?? 'N/A' }}
+                                    </td>
                                     <td>{{ Str::limit($event->description, 70) }}</td>
                                     <td>{{ $event->incident_date }}</td>
                                     <td>
                                         @if ($event->media->isNotEmpty())
-                                            <img src="{{ asset($event->media->first()->file_url) }}" alt="event media" width="100"
-                                                height="auto">
+                                            <img src="{{ asset($event->media->first()->file_url) }}" alt="event media"
+                                                width="100" height="auto">
                                         @else
                                             <span>No Media</span>
                                         @endif
@@ -172,7 +173,9 @@
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
-                                @error('category_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                @error('category_id')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <!-- Incident Type -->
@@ -183,7 +186,9 @@
                                     <option value="">Select Incident Type</option>
                                     <!-- Populated via AJAX or Blade foreach for selected category -->
                                 </select>
-                                @error('incident_type_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                @error('incident_type_id')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
 
                                 <!-- Other Incident Type text -->
                                 <input type="text" name="incident_type_other" id="incident_type_other"
@@ -212,9 +217,11 @@
                         <!-- Description -->
                         <div class="mb-3">
                             <label class="form-label">Detailed Description</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" name="description"
-                                rows="3" placeholder="Describe the event...">{{ old('description') }}</textarea>
-                            @error('description') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3"
+                                placeholder="Describe the event...">{{ old('description') }}</textarea>
+                            @error('description')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <!-- Attach Media -->
@@ -230,14 +237,18 @@
                                 <input type="date" name="incident_date"
                                     class="form-control @error('incident_date') is-invalid @enderror"
                                     value="{{ old('incident_date') }}">
-                                @error('incident_date') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                @error('incident_date')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Time of Incident</label>
                                 <input type="time" name="incident_time"
                                     class="form-control @error('incident_time') is-invalid @enderror"
                                     value="{{ old('incident_time') }}">
-                                @error('incident_time') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                @error('incident_time')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
@@ -250,7 +261,8 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="show-event-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="show-event-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -307,7 +319,7 @@
 
     @push('script')
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 let dTable = $('#data-table').DataTable({
                     order: [],
                     lengthMenu: [
@@ -320,10 +332,10 @@
 
                     language: {
                         processing: `<div class="text-center">
-                                                                                                        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                                                                                                        <span class="visually-hidden">Loading...</span>
-                                                                                                    </div>
-                                                                                                        </div>`
+                                     <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>`
                     },
 
                     scroller: {
@@ -335,14 +347,40 @@
                         url: "{{ route('admin.security_events.index') }}",
                         type: "get",
                     },
-                    columns: [
-                        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                        { data: 'event_category', name: 'event_category' },
-                        { data: 'incident_type', name: 'incident_type' },
-                        { data: 'description', name: 'description' },
-                        { data: 'incident_date', name: 'incident_date' },
-                        { data: 'media', name: 'media', orderable: false, searchable: false },
-                        { data: 'status_actions', name: 'status_actions', orderable: false, searchable: false },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'event_category',
+                            name: 'event_category'
+                        },
+                        {
+                            data: 'incident_type',
+                            name: 'incident_type'
+                        },
+                        {
+                            data: 'description',
+                            name: 'description'
+                        },
+                        {
+                            data: 'incident_date',
+                            name: 'incident_date'
+                        },
+                        {
+                            data: 'media',
+                            name: 'media',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'status_actions',
+                            name: 'status_actions',
+                            orderable: false,
+                            searchable: false
+                        },
                     ]
 
                 });
@@ -356,7 +394,7 @@
                 // });
 
                 // Open modal and show incident data
-                $('body').on('click', '.show-event', function () {
+                $('body').on('click', '.show-event', function() {
                     let id = $(this).data('id');
                     $('#verify-btn').attr('data-id', id);
 
@@ -365,7 +403,7 @@
                     $.ajax({
                         url: url,
                         type: 'GET',
-                        success: function (res) {
+                        success: function(res) {
                             if (res.success) {
                                 let incident = res.data;
                                 // console.log(incident);
@@ -382,7 +420,9 @@
                                 previewDiv.empty();
                                 if (incident.media && incident.media.length > 0) {
                                     incident.media.forEach(m => {
-                                        previewDiv.append(`<img src="${m.file_url}" style="width:120px; height:auto;" class="img-thumbnail">`);
+                                        previewDiv.append(
+                                            `<img src="${m.file_url}" style="width:120px; height:auto;" class="img-thumbnail">`
+                                        );
                                     });
                                 }
 
@@ -391,14 +431,14 @@
                                 toastr.error('Something went wrong. Try again later.');
                             }
                         },
-                        error: function () {
+                        error: function() {
                             toastr.error('Request failed! Please try again.');
                         }
                     });
                 });
 
                 // Verify button
-                $(document).on('click', '#verify-btn', function () {
+                $(document).on('click', '#verify-btn', function() {
                     let id = $(this).data('id');
 
                     $.ajax({
@@ -407,13 +447,13 @@
                         data: {
                             _token: '{{ csrf_token() }}'
                         },
-                        success: function (response) {
+                        success: function(response) {
                             $('#show-event-modal').modal('hide');
                             toastr.success(response.message);
                             // Reload DataTable
                             $('#data-table').DataTable().ajax.reload();
                         },
-                        error: function () {
+                        error: function() {
                             toastr.error('Something went wrong!');
                         }
                     });
@@ -422,7 +462,7 @@
 
 
                 // Fetch Incident Types by Category
-                $('#category_id').on('change', function () {
+                $('#category_id').on('change', function() {
                     let categoryId = $(this).val();
                     let incidentSelect = $('#incident_type_id');
                     incidentSelect.empty().append('<option value="">Select Incident Type</option>');
@@ -431,12 +471,16 @@
 
                     if (categoryId) {
                         $.ajax({
-                            url: '{{ route("admin.incident_types.by_category") }}',
+                            url: '{{ route('admin.incident_types.by_category') }}',
                             type: 'GET',
-                            data: { category_id: categoryId },
-                            success: function (data) {
-                                data.forEach(function (item) {
-                                    incidentSelect.append(`<option value="${item.id}" data-share="${item.share_regionally ? 'Yes' : 'No'}">${item.name}</option>`);
+                            data: {
+                                category_id: categoryId
+                            },
+                            success: function(data) {
+                                data.forEach(function(item) {
+                                    incidentSelect.append(
+                                        `<option value="${item.id}" data-share="${item.share_regionally ? 'Yes' : 'No'}">${item.name}</option>`
+                                    );
                                 });
                                 incidentSelect.append('<option value="other">Other</option>');
                             }
@@ -445,7 +489,7 @@
                 });
 
                 // Show Other field
-                $('#incident_type_id').on('change', function () {
+                $('#incident_type_id').on('change', function() {
                     if ($(this).val() === 'other') {
                         $('#incident_type_other').show();
                     } else {
@@ -453,6 +497,17 @@
                     }
                 });
 
+            });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let activeTab = @json(session('activeTab'));
+                if (activeTab) {
+                    const triggerEl = document.querySelector(`button[data-bs-target="#${activeTab}"]`);
+                    if (triggerEl) {
+                        new bootstrap.Tab(triggerEl).show();
+                    }
+                }
             });
         </script>
     @endpush

@@ -40,6 +40,12 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Church Name</th>
+                                        <th>Church ID</th>
+                                        <th>UserName</th>
+                                        <th>Denomination</th>
+                                        <th>Church Phone</th>
+                                        <th>Church Address</th>
+                                        <th>City & Size</th>
                                         <th>Role</th>
                                         {{--  <th>Status</th>  --}}
                                         <th class="text-center">Actions</th>
@@ -116,19 +122,55 @@
                             {
                                 data: 'email',
                                 name: 'email',
-                                orderable: true,
+                                orderable: false,
                                 searchable: true
                             },
                             {
                                 data: 'church_name',
                                 name: 'church_name',
-                                orderable: true,
+                                orderable: false,
+                                searchable: true
+                            },
+                            {
+                                data: 'unique_id',
+                                name: 'unique_id',
+                                orderable: false,
+                                searchable: true
+                            },
+                            {
+                                data: 'user_name',
+                                name: 'user_name',
+                                orderable: false,
+                                searchable: true
+                            },
+                            {
+                                data: 'denomination',
+                                name: 'denomination',
+                                orderable: false,
+                                searchable: true
+                            },
+                            {
+                                data: 'phone',
+                                name: 'phone',
+                                orderable: false,
+                                searchable: true
+                            },
+                            {
+                                data: 'address',
+                                name: 'address',
+                                orderable: false,
+                                searchable: true
+                            },
+                            {
+                                data: 'city',
+                                name: 'city',
+                                orderable: false,
                                 searchable: true
                             },
                             {
                                 data: 'role',
                                 name: 'role',
-                                orderable: true,
+                                orderable: false,
                                 searchable: true
                             },
                             {

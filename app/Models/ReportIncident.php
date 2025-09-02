@@ -27,7 +27,7 @@ class ReportIncident extends Model
 
     public function churchProfile()
     {
-        return $this->belongsTo(ChurchProfile::class);
+        return $this->belongsTo(ChurchProfile::class, 'church_profile_id');
     }
 
     public function category()

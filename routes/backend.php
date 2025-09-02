@@ -49,6 +49,8 @@ Route::controller(SecurityEventController::class)->group(function () {
     Route::get('/security-event', 'index')->name('admin.security_events.index');
     Route::post('/security-event/store', 'store')->name('admin.security_events.store');
     Route::get('/security-event/edit/{id}', 'edit')->name('admin.security_events.edit');
+    Route::get('/security-event/show/{id}', 'show')->name('admin.security_events.show');
+    Route::post('/security-event/update/{id}', 'update')->name('admin.security_events.update');
     Route::post('/security-event/verify/{id}', 'verify')->name('admin.security_events.verify');
     Route::get('/incident-types/by-category', 'getIncidentTypes')->name('admin.incident_types.by_category');
 });

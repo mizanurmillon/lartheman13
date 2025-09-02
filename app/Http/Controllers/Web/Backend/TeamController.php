@@ -36,6 +36,24 @@ class TeamController extends Controller
                 ->addColumn('church_name', function ($data) {
                     return $data->churchProfile->church_name;
                 })
+                ->addColumn('unique_id', function ($data) {
+                    return $data->churchProfile->unique_id;
+                })
+                ->addColumn('user_name', function ($data) {
+                    return $data->churchProfile->user_name;
+                })
+                ->addColumn('denomination', function ($data) {
+                    return $data->churchProfile->denomination;
+                })
+                ->addColumn('phone', function ($data) {
+                    return $data->churchProfile->phone;
+                })
+                ->addColumn('address', function ($data) {
+                    return $data->churchProfile->address;
+                })
+                ->addColumn('city', function ($data) {
+                    return $data->churchProfile->city_and_size;
+                })
                 ->addColumn('role', function ($data) {
                     if ($data->role == 'admin') {
                         $role = '<span class="badge badge-primary">Church Admin</span>';
@@ -62,7 +80,7 @@ class TeamController extends Controller
 
                 //     return $status;
                 // })
-                ->rawColumns(['status','church_name','avatar','role','name','email'])
+                ->rawColumns(['status','church_name','avatar','role','name','email','denomination','phone', 'address', 'action', 'city', 'unique_id', 'user_name'])
                 ->make(true);
         }
         return view('backend.layouts.team.index');

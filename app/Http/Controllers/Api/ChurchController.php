@@ -53,6 +53,8 @@ class ChurchController extends Controller
 
         $data = ChurchProfile::create([
             'church_name' => $request->church_name,
+            'unique_id' => 'CH' . strtoupper(uniqid()),
+            'user_name' => strtolower(preg_replace('/\s+/', '_', $request->church_name)),
             'email' => $request->email,
             'phone' => $request->phone,
             'denomination' => $request->denomination,

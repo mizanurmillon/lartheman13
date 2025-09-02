@@ -48,7 +48,9 @@ class SecurityEventController extends Controller
                     return '<span class="status-badge status-pending">Pending</span>
                         <button class="btn btn-primary btn-sm show-event" data-bs-toggle="modal"
                             data-bs-target="#show-event-modal"
-                            data-id="' . $review->id . '">Review</button>';
+                            data-id="' . $review->id . '">Review</button>
+                            
+                            <a href="' . route('admin.security_events.show', ['id' => $review->id]) . '" class="btn btn-success btn-sm">Edit</a>';
                 })
                 ->rawColumns(['media', 'status_actions', 'description'])
                 ->make(true);
@@ -73,7 +75,7 @@ class SecurityEventController extends Controller
             'description' => 'required|string|max:2000',
             'location_id' => 'required|exists:locations,id',
             'incident_date' => 'required|date',
-            'incident_time' => 'required|date_format:H:i',
+            'incident_time' => 'required',
             'file_url.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
         ]);
 
@@ -201,5 +203,78 @@ class SecurityEventController extends Controller
         $categoryId = $request->category_id;
         $types = IncidentType::where('category_id', $categoryId)->get(['id', 'name', 'share_regionally']);
         return response()->json($types);
+    }
+
+    public function show($id)
+    {
+        $incident = ReportIncident::with(['media', 'category', 'location', 'incidentType'])->find($id);
+
+        if (!$incident) {
+            return redirect()->route('admin.security_events.index')->with('t-error', 'Incident not found.');
+        }
+
+        $categories = Category::where('status', 'active')->latest()->get();
+        $locations  = Location::latest()->get();
+        $incidentTypes = IncidentType::latest()->get();
+
+        return view('backend.layouts.security_events.edit', compact('incident', 'categories', 'locations', 'incidentTypes'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'incident_type_id' => 'required', // will handle 'other' manually
+            'incident_type_other' => 'nullable|string|max:255',
+            'description' => 'required|string|max:2000',
+            'location_id' => 'required|exists:locations,id',
+            'incident_date' => 'required|date',
+            'incident_time' => 'required',
+            'file_url.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+        ]);
+
+        $incident = ReportIncident::find($id);
+
+        if (!$incident) {
+            return redirect()->route('admin.security_events.index')->with('t-error', 'Incident not found.');
+        }
+
+        // Determine incident_type_id and incident_type_other
+        if ($request->incident_type_id === 'other') {
+            $incidentTypeId = null;
+            $incidentTypeOther = $request->incident_type_other;
+        } else {
+            $incidentTypeId = $request->incident_type_id;
+            $incidentTypeOther = null;
+        }
+
+        $data = [
+            'category_id' => $request->category_id,
+            'incident_type_id' => $incidentTypeId,
+            'incident_type_other' => $incidentTypeOther,
+            'description' => $request->description,
+            'location_id' => $request->location_id,
+            'share_regionally_mode' => $request->input('share_regionally_mode', 'own_region'),
+            'incident_date' => $request->incident_date,
+            'incident_time' => $request->incident_time,
+        ];
+
+        $incident->update($data);
+
+        // Handle file uploads
+        if ($request->hasFile('file_url')) {
+            foreach ($request->file('file_url') as $file) {
+                $fileName = uploadImage($file, 'report_incidents');
+                Media::create([
+                    'report_incident_id' => $incident->id,
+                    'file_url' => $fileName,
+                ]);
+            }
+        }
+
+        return redirect()
+            ->route('admin.security_events.index')
+            ->with('t-success', 'Security event updated successfully')
+            ->with('activeTab', 'church');
     }
 }

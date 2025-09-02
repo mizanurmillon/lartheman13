@@ -21,7 +21,8 @@ class ReportController extends Controller
         $churches      = ChurchProfile::all();
 
         // Query builder for report incidents
-        $query = ReportIncident::with(['category', 'incidentType', 'location', 'churchProfile']);
+        $query = ReportIncident::with(['category', 'incidentType', 'location', 'churchProfile'])->whereNot('user_id',auth()->id());
+        // dd($query->get());
 
         // Apply filters if selected
         if ($request->category_id) {
@@ -41,9 +42,11 @@ class ReportController extends Controller
         }
 
         // Group by category for chart
-        $categoryWiseIncidents = $query->selectRaw('category_id, COUNT(*) as total')
-            ->groupBy('category_id')
+        $categoryWiseIncidents = $query->with('churchProfile', 'category') // include relations
+            ->selectRaw('category_id, church_profile_id, COUNT(*) as total')
+            ->groupBy('category_id', 'church_profile_id')
             ->get();
+        // dd($categoryWiseIncidents);
 
         return view('backend.layouts.reports.index', compact(
             'categoryWiseIncidents',

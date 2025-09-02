@@ -28,6 +28,10 @@ class TrainingProgramController extends Controller
                 ->addColumn('video', function ($data) {
                     $url = asset($data->video);
 
+                    if (!$data->video) {
+                        return 'No Video';
+                    }
+
                     return '<video width="220" height="80" controls>
                             <source src="' . $url . '" type="video/mp4">
                             Your browser does not support the video tag.
@@ -76,18 +80,22 @@ class TrainingProgramController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:2550',
-            'video' => 'required|mimetypes:video/mp4,video/ogg,video/webm|max:512000',
+            'video' => 'nullable|mimetypes:video/mp4,video/ogg,video/webm|max:512000',
             'file_url' => 'nullable|mimes:pdf,doc,docx|max:5120',
         ]);
 
         if ($request->hasFile('video')) {
             $video                        = $request->file('video');
             $videoName                    = uploadImage($video, 'training_programs');
+        }else{
+            $videoName = null;
         }
 
         if ($request->hasFile('file_url')) {
             $file_url                    = $request->file('file_url');
             $fileName                    = uploadImage($file_url, 'training_programs');
+        }else{
+            $fileName = null;
         }
 
         $training_program = TrainingProgram::create([
