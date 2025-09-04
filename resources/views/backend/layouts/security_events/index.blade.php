@@ -39,19 +39,10 @@
 @section('title', 'Security Events')
 
 @section('content')
-
     <div class="container-fluid py-4">
-        <div class="d-flex align-items-start gap-3 mb-8">
+        <div class="d-flex align-items-start gap-3 mb-4">
             <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="#267fd9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-shield-alert" style="height: 24px; width: 24px;">
-                    <path
-                        d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
-                    </path>
-                    <path d="M12 8v4"></path>
-                    <path d="M12 16h.01"></path>
-                </svg>
+                <i class="bi bi-shield-lock fs-4"></i>
             </div>
             <div>
                 <h1 class="h3 fw-bold">Security Events</h1>
@@ -60,32 +51,36 @@
         </div>
 
         <!-- Tabs -->
-        <ul class="nav nav-tabs mb-5" id="myTab" role="tablist">
+        <ul class="nav nav-tabs mb-5" id="securityTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="regional-tab" data-bs-toggle="tab" data-bs-target="#regional"
-                    type="button">Regional Feed</button>
+                <button
+                    class="nav-link {{ request('activeTab') == 'regional' ? 'active' : (!request('activeTab') ? 'active' : '') }}"
+                    id="regional-tab" data-bs-toggle="tab" data-bs-target="#regional" type="button">
+                    Regional Feed
+                </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="church-tab" data-bs-toggle="tab" data-bs-target="#church" type="button">My
-                    Church Log</button>
+                <button class="nav-link {{ request('activeTab') == 'church' ? 'active' : '' }}" id="church-tab"
+                    data-bs-toggle="tab" data-bs-target="#church" type="button">
+                    My Church Log
+                </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="report-tab" data-bs-toggle="tab" data-bs-target="#report"
-                    type="button">Report Event</button>
+                <button class="nav-link {{ request('activeTab') == 'report' ? 'active' : '' }}" id="report-tab"
+                    data-bs-toggle="tab" data-bs-target="#report" type="button">
+                    Report Event
+                </button>
             </li>
         </ul>
 
         <!-- Tab Content -->
-        <div class="tab-content" id="myTabContent">
-
+        <div class="tab-content" id="securityTabContent">
             <!-- Regional Feed -->
-            <div class="tab-pane fade" id="regional" role="tabpanel" aria-labelledby="regional-tab">
+            <div class="tab-pane fade {{ request('activeTab') == 'regional' || !request('activeTab') ? 'show active' : '' }}"
+                id="regional" role="tabpanel">
                 <div class="card p-3">
-                    <div class="mb-4">
-                        <h3 class="font-headline text-2xl font-semibold leading-none tracking-tight"
-                            style="font-size: 1.5rem;">Regional Feed</h3>
-                        <p class="text-sm text-muted">Approved security events from nearby churches.</p>
-                    </div>
+                    <h5>Regional Feed</h5>
+                    <p class="text-muted">Approved security events from nearby churches.</p>
                     <table class="table table-hover table-bordered">
                         <thead>
                             <tr>
@@ -100,20 +95,25 @@
                         <tbody>
                             @foreach ($verified as $event)
                                 <tr>
-                                    <td>{{ $event->category ? $event->category->name : 'N/A' }}</td>
-                                    <td>{{ $event->incidentType ? $event->incidentType->name : $event->incident_type_other ?? 'N/A' }}
-                                    </td>
+                                    <td>{{ $event->category?->name ?? 'N/A' }}</td>
+                                    <td>{{ $event->incidentType?->name ?? ($event->incident_type_other ?? 'N/A') }}</td>
                                     <td>{{ Str::limit($event->description, 70) }}</td>
                                     <td>{{ $event->incident_date }}</td>
                                     <td>
                                         @if ($event->media->isNotEmpty())
-                                            <img src="{{ asset($event->media->first()->file_url) }}" alt="event media"
-                                                width="100" height="auto">
+                                            <img src="{{ asset($event->media->first()->file_url) }}" width="100"
+                                                alt="Media">
                                         @else
                                             <span>No Media</span>
                                         @endif
                                     </td>
-                                    <td><span class="status-badge status-verified">{{ $event->status }}</span></td>
+                                    <td>
+                                        <span class="status-badge status-verified">{{ $event->status }}</span>
+                                        <a href="{{ route('admin.security_events.view', $event->id) }}"
+                                            class="btn btn-info btn-sm">
+                                            <i class="bi bi-eye-fill"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -122,43 +122,20 @@
             </div>
 
             <!-- My Church Log -->
-            <div class="tab-pane fade" id="church" role="tabpanel" aria-labelledby="church-tab">
+            <div class="tab-pane fade {{ request('activeTab') == 'church' ? 'show active' : '' }}" id="church"
+                role="tabpanel">
                 <div class="card p-3">
-                    <div class="mb-4">
-                        <h3 class="font-headline text-2xl font-semibold leading-none tracking-tight"
-                            style="font-size: 1.5rem;">Event Log for Your Church</h3>
-                        <p class="text-sm text-muted">A log of security-related events for your church. Admins can approve
-                            pending events here.</p>
-                    </div>
-                    <div class="table-wrapper table-responsive mt-5">
-                        <table id="data-table" class="table table-bordered mt-5">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Event Category</th>
-                                    <th>Incident Type</th>
-                                    <th>Details</th>
-                                    <th>Date</th>
-                                    <th>Media</th>
-                                    <th>Status & Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>
+                    <h5>Event Log for Your Church</h5>
+                    <p class="text-muted">A log of security-related events for your church.</p>
+                    <table id="data-table" class="table table-bordered mt-3"></table>
                 </div>
             </div>
 
             <!-- Report Event -->
-            <div class="tab-pane fade show active" id="report" role="tabpanel" aria-labelledby="report-tab">
+            <div class="tab-pane fade {{ request('activeTab') == 'report' ? 'show active' : '' }}" id="report"
+                role="tabpanel">
                 <div class="card p-4">
-                    <div class="mb-4">
-                        <h3 class="font-headline text-2xl font-semibold">Report a New Security Event</h3>
-                        <p class="text-sm text-muted">All submissions are confidential and reviewed by an administrator.</p>
-                    </div>
-
+                    <h5>Report a New Security Event</h5>
                     <form action="{{ route('admin.security_events.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
@@ -259,7 +236,6 @@
         </div>
     </div>
 
-
     <!-- Modal -->
     <div class="modal fade" id="show-event-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -273,11 +249,11 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label">Incident Type</label>
+                            <label class="form-label">Event Category</label>
                             <input type="text" class="form-control" id="incident_type" readonly>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Event Category</label>
+                            <label class="form-label">Incident Type</label>
                             <input type="text" class="form-control" id="incident_type_name" readonly>
                         </div>
                     </div>
@@ -315,7 +291,6 @@
             </div>
         </div>
     </div>
-
 
     @push('script')
         <script>
@@ -511,6 +486,4 @@
             });
         </script>
     @endpush
-
-
 @endsection

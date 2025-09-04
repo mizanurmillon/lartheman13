@@ -43,9 +43,14 @@ class SecurityEventController extends Controller
                 })
                 ->addColumn('status_actions', function ($review) {
                     if ($review->status == 'approved') {
-                        return '<span class="status-badge status-verified">Verified</span>';
+                        return '<span class="status-badge status-verified">Verified</span>
+                         <a href="' . route('admin.security_events.view', ['id' => $review->id]) . '" class="btn btn-info btn-sm">
+                         <i class="bi bi-eye-fill"></i></a>
+                         <a href="' . route('admin.security_events.show', ['id' => $review->id]) . '" class="btn btn-success btn-sm">Edit</a>';
                     }
                     return '<span class="status-badge status-pending">Pending</span>
+                        <a href="' . route('admin.security_events.view', ['id' => $review->id]) . '" class="btn btn-info btn-sm">
+                        <i class="bi bi-eye-fill"></i></a>
                         <button class="btn btn-primary btn-sm show-event" data-bs-toggle="modal"
                             data-bs-target="#show-event-modal"
                             data-id="' . $review->id . '">Review</button>
@@ -115,7 +120,8 @@ class SecurityEventController extends Controller
         }
 
         return redirect()->route('admin.security_events.index')
-            ->with('t-success', 'Security event created successfully');
+            ->with('t-success', 'Security event created successfully')
+            ->with('activeTab', 'church');
     }
 
 
@@ -276,5 +282,16 @@ class SecurityEventController extends Controller
             ->route('admin.security_events.index')
             ->with('t-success', 'Security event updated successfully')
             ->with('activeTab', 'church');
+    }
+
+    public function view($id)
+    {
+        $incident = ReportIncident::with(['media', 'category', 'location', 'incidentType'])->find($id);
+
+        if (!$incident) {
+            return redirect()->route('admin.security_events.index')->with('t-error', 'Incident not found.');
+        }
+
+        return view('backend.layouts.security_events.view', compact('incident'));
     }
 }

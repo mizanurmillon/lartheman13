@@ -111,7 +111,7 @@
 
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.security_events.*') ? 'active' : '' }}"
-                        href="{{ route('admin.security_events.index') }}">
+                        href="{{ route('admin.security_events.index',['activeTab' => 'report']) }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
 

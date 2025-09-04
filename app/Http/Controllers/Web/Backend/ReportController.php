@@ -21,7 +21,7 @@ class ReportController extends Controller
         $churches      = ChurchProfile::all();
 
         // Query builder for report incidents
-        $query = ReportIncident::with(['category', 'incidentType', 'location', 'churchProfile'])->whereNot('user_id',auth()->id());
+        $query = ReportIncident::with(['category', 'incidentType', 'location', 'churchProfile']);
         // dd($query->get());
 
         // Apply filters if selected

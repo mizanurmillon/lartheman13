@@ -84,7 +84,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Incident Types</h5>
                         <p class="text-muted small">Breakdown of all recorded incidents by category.</p>
-                        <div class="text-center p-5 bg-light border rounded" style="height: 350px;">
+                        <div class="text-center p-5 bg-light border rounded" style="height: 550px;">
                             <canvas id="incidentChart" style="max-height: 600px; max-width: 100%;"></canvas>
                         </div>
                     </div>
@@ -113,13 +113,12 @@
             document.addEventListener("DOMContentLoaded", function() {
                 const ctx = document.getElementById('incidentChart').getContext('2d');
                 const categoryWiseData = @json($categoryWiseIncidents);
-                console.log(categoryWiseData);
 
                 const labels = categoryWiseData.map(item => {
                     const categoryName = item.category?.name ?? 'Unknown';
-                    const churchName = item.church_profile.church_name ?? 'Unknown Church';
-                    const uniqueId = item.church_profile.unique_id ?? 'N/A';
-                    return `${categoryName} - ${churchName} (${uniqueId})`;
+                    const churchName = item.church_profile?.church_name ?? 'Super Admin';
+                    const uniqueId = item.church_profile?.unique_id ?? '';
+                    return `${categoryName} - ${churchName} - ${uniqueId}`;
                 });
 
                 const data = categoryWiseData.map(item => item.total);

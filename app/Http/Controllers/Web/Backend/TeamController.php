@@ -28,7 +28,7 @@ class TeamController extends Controller
                 })
                 ->addColumn('avatar', function ($data) {
                     $url = asset($data->user->avatar);
-                    if (!$data->avatar) {
+                    if (!$data->user->avatar) {
                         $url = asset('backend/images/placeholder/image_placeholder.png');
                     }
                     return '<img src="' . $url . '" alt="Avatar" class="rounded-circle" width="50" height="50">';
@@ -45,14 +45,14 @@ class TeamController extends Controller
                 ->addColumn('denomination', function ($data) {
                     return $data->churchProfile->denomination;
                 })
-                ->addColumn('phone', function ($data) {
-                    return $data->churchProfile->phone;
-                })
                 ->addColumn('address', function ($data) {
                     return $data->churchProfile->address;
                 })
                 ->addColumn('city', function ($data) {
-                    return $data->churchProfile->city_and_size;
+                    return $data->churchProfile->city;
+                })
+                ->addColumn('state', function ($data) {
+                    return $data->churchProfile->state ?? 'N/A';
                 })
                 ->addColumn('role', function ($data) {
                     if ($data->role == 'admin') {
@@ -70,19 +70,20 @@ class TeamController extends Controller
                     }
                     return $status;
                 })
-                // ->addColumn('action', function ($data) {
-                //     $status = ' <div class="form-check form-switch">';
-                //     $status .= ' <input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
-                //     if ($data->user->status == "active") {
-                //         $status .= "checked";
-                //     }
-                //     $status .= '><label for="customSwitch' . $data->id . '" class="form-check-label" for="customSwitch"></label></div>';
-
-                //     return $status;
-                // })
-                ->rawColumns(['status','church_name','avatar','role','name','email','denomination','phone', 'address', 'action', 'city', 'unique_id', 'user_name'])
+                ->addColumn('action', function ($row) {
+                    return '<div class="text-center"><div class="btn-group btn-group-sm" role="group">
+                              <a href="' . route('admin.team.show', ['id' => $row->id]) . '" class="text-white btn btn-primary" title="Edit"><i class="bi bi-eye"></i></a>';
+                })
+                ->rawColumns(['status','church_name','avatar','role','name','email','denomination', 'address', 'action', 'city', 'unique_id', 'user_name', 'state'])
                 ->make(true);
         }
         return view('backend.layouts.team.index');
     }
+
+    public function show($id)
+    {
+        $teamMember = TeamMember::with('churchProfile', 'user')->findOrFail($id);
+        return view('backend.layouts.team.show', compact('teamMember'));
+    }
 }
+   

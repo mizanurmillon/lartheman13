@@ -32,7 +32,7 @@
                 <div class="card bg-primary text-white shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title fw-semibold">Report an Incident</h5>
-                        <a href="{{ route('admin.security_events.index') }}" class="btn btn-secondary w-100 mt-3">
+                        <a href="{{ route('admin.security_events.index', ['activeTab' => 'report']) }}" class="btn btn-secondary w-100 mt-3">
                             <i class="bi bi-plus-circle me-2"></i> New Report
                         </a>
                     </div>
@@ -55,15 +55,24 @@
                                         <th>Incident Type</th>
                                         <th>Location</th>
                                         <th>Details</th>
+                                        <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($latestIncidents as $incident)
                                         <tr>
                                             <td>{{ $incident->category ? $incident->category->name : 'N/A' }}</td>
-                                            <td>{{ $incident->incidentType ? $incident->incidentType->name : ($incident->incident_type_other ?? 'N/A') }}</td>
-                                            <td><i class="bi bi-geo-alt me-1 text-muted"></i> {{ $incident->location->name ?? 'N/A' }}</td>
+                                            <td>{{ $incident->incidentType ? $incident->incidentType->name : $incident->incident_type_other ?? 'N/A' }}
+                                            </td>
+                                            <td><i class="bi bi-geo-alt me-1 text-muted"></i>
+                                                {{ $incident->location->name ?? 'N/A' }}</td>
                                             <td>{{ Str::limit($incident->description, 100) }}</td>
+                                            <td class="text-center">
+                                                <a href="{{ route('admin.security_events.view', $incident->id) }}"
+                                                    class="btn btn-info btn-sm">
+                                                    <i class="bi bi-eye-fill"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -116,7 +125,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 Echo.private('chat-channel.' + 1).listen('MessageSentEvent', (e) => {
                     console.log('Message Receiver:', e);
                 })
@@ -127,14 +136,17 @@
 
             });
 
-            document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function() {
                 const ctx = document.getElementById('incidentChart').getContext('2d');
-
-                // PHP data → JavaScript variable
                 const categoryWiseData = @json($categoryWiseIncidents);
 
-                // labels & data prepare for Chart.js
-                const labels = categoryWiseData.map(item => item.category?.name ?? 'Unknown');
+                const labels = categoryWiseData.map(item => {
+                    const categoryName = item.category?.name ?? 'Unknown';
+                    const churchName = item.church_profile?.church_name ?? 'Super Admin';
+                    const uniqueId = item.church_profile?.unique_id ?? '';
+                    return `${categoryName} - ${churchName} - ${uniqueId}`;
+                });
+
                 const data = categoryWiseData.map(item => item.total);
 
                 new Chart(ctx, {
@@ -183,7 +195,12 @@
                                 display: false
                             },
                             tooltip: {
-                                enabled: true
+                                enabled: true,
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` Incidents: ${context.raw}`;
+                                    }
+                                }
                             }
                         }
                     }

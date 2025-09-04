@@ -19,9 +19,9 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        $categoryWiseIncidents = ReportIncident::with('category')
-            ->selectRaw('category_id, COUNT(*) as total')
-            ->groupBy('category_id')
+        $categoryWiseIncidents = ReportIncident::with(['churchProfile', 'category'])
+            ->selectRaw('category_id, church_profile_id, COUNT(*) as total')
+            ->groupBy('category_id', 'church_profile_id')
             ->limit(5)
             ->get();
 

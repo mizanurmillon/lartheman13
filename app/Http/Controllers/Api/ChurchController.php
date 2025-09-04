@@ -24,7 +24,8 @@ class ChurchController extends Controller
                 'phone' => 'required|phone:AUTO|unique:church_profiles,phone',
                 'denomination' => 'required|string|max:255',
                 'address' => 'required|string|max:500',
-                'city_and_size' => 'required|string|max:255',
+                'city' => 'required|string|max:255',
+                'state' => 'nullable|string|max:255',
                 'i_confirm' => 'nullable|boolean',
             ],
             [
@@ -36,7 +37,7 @@ class ChurchController extends Controller
                 'phone.phone' => 'Invalid phone number',
                 'denomination.required' => 'Denomination is required',
                 'address.required' => 'Address is required',
-                'city_and_size.required' => 'City and size is required',
+                'city.required' => 'City and size is required',
                 'i_confirm.required' => 'I confirm is required',
             ]
         );
@@ -59,7 +60,8 @@ class ChurchController extends Controller
             'phone' => $request->phone,
             'denomination' => $request->denomination,
             'address' => $request->address,
-            'city_and_size' => $request->city_and_size,
+            'city' => $request->city,
+            'state' => $request->state,
             'i_confirm' => $request->i_confirm,
         ]);
 

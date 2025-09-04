@@ -53,6 +53,8 @@ Route::controller(SecurityEventController::class)->group(function () {
     Route::post('/security-event/update/{id}', 'update')->name('admin.security_events.update');
     Route::post('/security-event/verify/{id}', 'verify')->name('admin.security_events.verify');
     Route::get('/incident-types/by-category', 'getIncidentTypes')->name('admin.incident_types.by_category');
+
+    Route::get('/security-event/view/{id}', 'view')->name('admin.security_events.view');
 });
 
 
@@ -68,6 +70,7 @@ Route::controller(TrainingProgramController::class)->group(function () {
 
 Route::controller(TeamController::class)->group(function () {
     Route::get('/team', 'index')->name('admin.team.index');
+    Route::get('/team/show/{id}', 'show')->name('admin.team.show');
 });
 
 Route::controller(ReportController::class)->group(function () {

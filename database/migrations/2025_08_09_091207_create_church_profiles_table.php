@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('denomination')->nullable();
             $table->text('address')->nullable();
-            $table->string('city_and_size')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->boolean('i_confirm')->default(false);
             $table->timestamps();

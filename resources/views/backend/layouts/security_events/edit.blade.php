@@ -203,8 +203,6 @@
                         otherInput.value = '';
                     }
                 }
-
-                // Initial load check (edit mode এর জন্য)
                 toggleOtherField();
 
                 // On change

@@ -43,10 +43,11 @@
                                         <th>Church ID</th>
                                         <th>UserName</th>
                                         <th>Denomination</th>
-                                        <th>Church Phone</th>
                                         <th>Church Address</th>
-                                        <th>City & Size</th>
+                                        <th>City</th>
+                                        <th>State</th>
                                         <th>Role</th>
+                                        <th>Status</th>
                                         {{--  <th>Status</th>  --}}
                                         <th class="text-center">Actions</th>
                                     </tr>
@@ -122,55 +123,55 @@
                             {
                                 data: 'email',
                                 name: 'email',
-                                orderable: false,
+                                orderable: true,
                                 searchable: true
                             },
                             {
                                 data: 'church_name',
                                 name: 'church_name',
-                                orderable: false,
+                                orderable: true,
                                 searchable: true
                             },
                             {
                                 data: 'unique_id',
                                 name: 'unique_id',
-                                orderable: false,
+                                orderable: true,
                                 searchable: true
                             },
                             {
                                 data: 'user_name',
                                 name: 'user_name',
-                                orderable: false,
+                                orderable: true,
                                 searchable: true
                             },
                             {
                                 data: 'denomination',
                                 name: 'denomination',
-                                orderable: false,
-                                searchable: true
-                            },
-                            {
-                                data: 'phone',
-                                name: 'phone',
-                                orderable: false,
+                                orderable: true,
                                 searchable: true
                             },
                             {
                                 data: 'address',
                                 name: 'address',
-                                orderable: false,
+                                orderable: true,
                                 searchable: true
                             },
                             {
                                 data: 'city',
                                 name: 'city',
-                                orderable: false,
+                                orderable: true,
                                 searchable: true
+                            },
+                            {
+                                data: 'state',
+                                name: 'state',
+                                orderable: false,
+                                searchable: false
                             },
                             {
                                 data: 'role',
                                 name: 'role',
-                                orderable: false,
+                                orderable: true,
                                 searchable: true
                             },
                             {
@@ -179,6 +180,12 @@
                                 orderable: false,
                                 searchable: false
                             },
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false
+                            }
                             
                         ],
                     });
