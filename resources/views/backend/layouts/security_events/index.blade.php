@@ -127,7 +127,19 @@
                 <div class="card p-3">
                     <h5>Event Log for Your Church</h5>
                     <p class="text-muted">A log of security-related events for your church.</p>
-                    <table id="data-table" class="table table-bordered mt-3"></table>
+                    <table id="data-table" class="table table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Event Category</th>
+                                <th>Incident Type</th>
+                                <th>Details</th>
+                                <th>Date</th>
+                                <th>Media</th>
+                                <th>Status & Actions</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
 
