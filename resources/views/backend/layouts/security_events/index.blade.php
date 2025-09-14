@@ -113,6 +113,19 @@
                                             class="btn btn-info btn-sm">
                                             <i class="bi bi-eye-fill"></i>
                                         </a>
+
+                                        <form action="{{ route('admin.security_events.toggle_pin', $event->id) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit"
+                                                class="btn btn-sm {{ $event->is_pinned ? 'btn-warning' : '' }}"
+                                                title="{{ $event->is_pinned ? 'Unpin Event' : 'Pin Event' }}">
+                                                <i
+                                                    class="bi {{ $event->is_pinned ? 'bi-pin-angle-fill' : 'bi-pin-angle' }}"></i>
+                                            </button>
+                                        </form>
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -148,6 +161,7 @@
                 role="tabpanel">
                 <div class="card p-4">
                     <h5>Report a New Security Event</h5>
+                    <br>
                     <form action="{{ route('admin.security_events.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
@@ -200,6 +214,28 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
+                        </div>
+
+                        <!-- Church name & address -->
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <label class="form-label">Church Name</label>
+                                <input type="text" name="church_name"
+                                    class="form-control @error('church_name') is-invalid @enderror"
+                                    value="{{ old('church_name') }}" placeholder="Enter Church Name">
+                                @error('church_name')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Church Address</label>
+                                <input type="text" name="church_address"
+                                    class="form-control @error('church_address') is-invalid @enderror"
+                                    value="{{ old('church_address') }}" placeholder="Enter Church Address">
+                                @error('church_address')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
 
 
@@ -273,6 +309,17 @@
                     <div class="mb-3">
                         <label class="form-label">Location</label>
                         <input type="text" class="form-control" id="location_name" readonly>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Church Name</label>
+                            <input type="text" class="form-control" id="church_name" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Church Address</label>
+                            <input type="text" class="form-control" id="church_address" readonly>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -401,6 +448,8 @@
                                 $('#description').val(incident.description || '');
                                 $('#incident_date').val(incident.incident_date || '');
                                 $('#incident_time').val(incident.incident_time || '');
+                                $('#church_name').val(incident.church_name || 'N/A');
+                                $('#church_address').val(incident.church_address || 'N/A');
 
                                 // Media
                                 let previewDiv = $('#preview-media');

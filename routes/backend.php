@@ -76,3 +76,7 @@ Route::controller(TeamController::class)->group(function () {
 Route::controller(ReportController::class)->group(function () {
     Route::get('/reports', 'index')->name('admin.reports.index');
 });
+
+Route::patch('security-events/{id}/toggle-pin', [SecurityEventController::class, 'togglePin'])
+    ->name('admin.security_events.toggle_pin');
+

@@ -19,7 +19,7 @@ class ReportIncidentController extends Controller
     public function allReports(Request $request)
     {
         $query = ReportIncident::with('churchProfile:id,church_name,denomination,address', 'user:id,name', 'category:id,name', 'incidentType:id,name', 'location:id,name','media')
-            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'incident_type_id', 'description', 'location_id', 'incident_date', 'incident_time')
+            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'incident_type_id', 'description', 'location_id', 'incident_date', 'incident_time', 'alerts_types','church_name', 'church_address')
             ->where('status', 'approved')->where('alerts_types', 'public');
 
         $data = $query->latest()->get();
@@ -33,7 +33,7 @@ class ReportIncidentController extends Controller
     public function singleReport($id)
     {
         $data = ReportIncident::with('churchProfile:id,church_name,denomination,address', 'user:id,name,avatar', 'category:id,name','incidentType:id,name','location:id,name','media')
-            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'incident_type_id', 'description', 'location_id', 'incident_date', 'incident_time', 'alerts_types', 'status')
+            ->select('id', 'category_id', 'user_id', 'church_profile_id', 'incident_type_id', 'description', 'location_id', 'incident_date', 'incident_time', 'alerts_types', 'church_name', 'church_address', 'status')
             ->where('id', $id)
             ->first();
         if (!$data) {

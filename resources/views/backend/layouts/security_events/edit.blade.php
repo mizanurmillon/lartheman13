@@ -132,6 +132,28 @@
                             @enderror
                         </div>
 
+                        <!-- Church name & address -->
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <label class="form-label">Church Name</label>
+                                <input type="text" name="church_name"
+                                    class="form-control @error('church_name') is-invalid @enderror"
+                                    value="{{ $incident->church_name ?? old('church_name') }}" placeholder="Enter Church Name">
+                                @error('church_name')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Church Address</label>
+                                <input type="text" name="church_address"
+                                    class="form-control @error('church_address') is-invalid @enderror"
+                                    value="{{ $incident->church_address ?? old('church_address') }}" placeholder="Enter Church Address">
+                                @error('church_address')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
 
                         <!-- Description -->
                         <div class="mb-3">

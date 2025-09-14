@@ -63,9 +63,10 @@ class SecurityEventController extends Controller
 
         $categories = Category::where('status', 'active')->latest()->get();
         $locations  = Location::latest()->get();
-        $verified   = ReportIncident::with('media', 'incidentType', 'category')
+        $verified = ReportIncident::with('media', 'incidentType', 'category')
             ->where('status', 'approved')
-            ->latest()
+            ->orderByDesc('is_pinned') 
+            ->latest('incident_date') 
             ->get();
 
         return view('backend.layouts.security_events.index', compact('categories', 'locations', 'verified'));
@@ -82,6 +83,8 @@ class SecurityEventController extends Controller
             'incident_date' => 'required|date',
             'incident_time' => 'required',
             'file_url.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+            'church_name' => 'required|string|max:255',
+            'church_address' => 'required|string|max:255',
         ]);
 
         // Determine incident_type_id and incident_type_other
@@ -103,6 +106,8 @@ class SecurityEventController extends Controller
             'share_regionally_mode' => $request->input('share_regionally_mode', 'own_region'),
             'incident_date' => $request->incident_date,
             'incident_time' => $request->incident_time,
+            'church_name' => $request->church_name,
+            'church_address' => $request->church_address,
             'status' => 'pending',
         ];
 
@@ -154,6 +159,8 @@ class SecurityEventController extends Controller
                 'description' => $incident->description,
                 'incident_date' => $incident->incident_date,
                 'incident_time' => $incident->incident_time,
+                'church_name' => $incident->church_name ?? "N/A",
+                'church_address' => $incident->church_address ?? "N/A",
                 'status' => $incident->status,
                 'media' => $incident->media->map(fn($m) => [
                     'id' => $m->id,
@@ -237,6 +244,8 @@ class SecurityEventController extends Controller
             'incident_date' => 'required|date',
             'incident_time' => 'required',
             'file_url.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+            'church_name' => 'required|string|max:255',
+            'church_address' => 'required|string|max:255',
         ]);
 
         $incident = ReportIncident::find($id);
@@ -263,6 +272,8 @@ class SecurityEventController extends Controller
             'share_regionally_mode' => $request->input('share_regionally_mode', 'own_region'),
             'incident_date' => $request->incident_date,
             'incident_time' => $request->incident_time,
+            'church_name' => $request->church_name,
+            'church_address' => $request->church_address,
         ];
 
         $incident->update($data);
@@ -293,5 +304,18 @@ class SecurityEventController extends Controller
         }
 
         return view('backend.layouts.security_events.view', compact('incident'));
+    }
+
+    public function togglePin($id)
+    {
+        $event = ReportIncident::findOrFail($id);
+        $event->is_pinned = !$event->is_pinned;
+        $event->save();
+
+        $status = $event->is_pinned ? 'pinned' : 'unpinned';
+
+        return redirect()->route('admin.security_events.index')
+            ->with('t-success', "Event {$status} successfully.")
+            ->with('activeTab', 'regional');
     }
 }
