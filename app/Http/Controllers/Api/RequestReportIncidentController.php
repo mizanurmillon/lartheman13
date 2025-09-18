@@ -25,8 +25,8 @@ class RequestReportIncidentController extends Controller
             return $this->error([], 'User is not a member of any team', 404);
         }
 
-        $data = ReportIncident::with('churchProfile:id,church_name,denomination,address','user:id,name','category:id,name', 'media')
-                        ->select('id','category_id','user_id','church_profile_id','title','description','location','incident_date','incident_time','alerts_types','status')
+        $data = ReportIncident::with('churchProfile:id,church_name,denomination_id,address','churchProfile.denomination:id,name','user:id,name','category:id,name','incidentType:id,name','location:id,name', 'media')
+                        ->select('id', 'category_id', 'user_id', 'church_profile_id', 'incident_type_id', 'description', 'location_id', 'incident_date', 'incident_time', 'alerts_types', 'status')
                         ->where('status', 'pending')->where('church_profile_id', $teamMember->church_profile_id);
 
         $data = $data->latest()->get();

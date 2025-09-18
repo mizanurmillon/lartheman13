@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('user_name')->nullable()->unique();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('denomination')->nullable();
+            $table->foreignId('denomination_id')->constrained('denominations')->onDelete('cascade');
             $table->text('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
+            $table->foreignId('city_id')->constrained('cities')->onDelete('cascade');
+            $table->foreignId('state_id')->constrained('states')->onDelete('cascade');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->boolean('i_confirm')->default(false);
             $table->timestamps();

@@ -9,11 +9,13 @@ use App\Http\Controllers\Api\SocialAuthController;
 use App\Http\Controllers\Api\SocialLinkController;
 use App\Http\Controllers\Api\DynamicPageController;
 use App\Http\Controllers\Api\SitesettingController;
+use App\Http\Controllers\Api\DenominationController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\ChurchProfileController;
 use App\Http\Controllers\Api\Chat\GroupInfoController;
 use App\Http\Controllers\Api\Chat\GetMessageController;
+use App\Http\Controllers\Api\CityStateSeederController;
 use App\Http\Controllers\Api\TrainingProgramController;
 use App\Http\Controllers\Api\Chat\CreateGroupController;
 use App\Http\Controllers\Api\Chat\SendMessageController;
@@ -134,4 +136,12 @@ Route::controller(TrainingProgramController::class)->group(function () {
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'categories');
     Route::get('/location', 'location');
+});
+
+Route::controller(DenominationController::class)->group(function () {
+    Route::get('/denominations', 'denominations');
+});
+
+Route::controller(CityStateSeederController::class)->group(function () {
+    Route::get('/city-state', 'cityState');
 });

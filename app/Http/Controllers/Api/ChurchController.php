@@ -20,12 +20,13 @@ class ChurchController extends Controller
             $request->all(),
             [
                 'church_name' => 'required|string|max:255',
+                'user_name' => 'nullable|string|unique:church_profiles,user_name',
                 'email' => 'required|email|unique:church_profiles,email',
                 'phone' => 'required|phone:AUTO|unique:church_profiles,phone',
-                'denomination' => 'required|string|max:255',
+                'denomination_id' => 'required|exists:denominations,id',
                 'address' => 'required|string|max:500',
-                'city' => 'required|string|max:255',
-                'state' => 'nullable|string|max:255',
+                'city_id' => 'required|exists:cities,id',
+                'state_id' => 'nullable|exists:states,id',
                 'i_confirm' => 'nullable|boolean',
             ],
             [
@@ -37,7 +38,8 @@ class ChurchController extends Controller
                 'phone.phone' => 'Invalid phone number',
                 'denomination.required' => 'Denomination is required',
                 'address.required' => 'Address is required',
-                'city.required' => 'City and size is required',
+                'city.required' => 'City is required',
+                'state.required' => 'State is required',
                 'i_confirm.required' => 'I confirm is required',
             ]
         );
@@ -58,10 +60,10 @@ class ChurchController extends Controller
             'user_name' => strtolower(preg_replace('/\s+/', '_', $request->church_name)),
             'email' => $request->email,
             'phone' => $request->phone,
-            'denomination' => $request->denomination,
+            'denomination_id' => $request->denomination_id,
             'address' => $request->address,
-            'city' => $request->city,
-            'state' => $request->state,
+            'city_id' => $request->city_id,
+            'state_id' => $request->state_id,
             'i_confirm' => $request->i_confirm,
         ]);
 
@@ -71,7 +73,7 @@ class ChurchController extends Controller
             'role' => 'admin'
         ]);
 
-        $data->load('teamMembers');
+        $data->load('denomination','city','state','teamMembers');
 
         if (!$data) {
             return $this->error([], 'Church profile not created', 500);
@@ -83,7 +85,7 @@ class ChurchController extends Controller
 
     public function getChurchProfile(Request $request)
     {
-        $query = ChurchProfile::with('teamMembers.user:id,name,email,avatar')->select('id', 'church_name', 'denomination', 'address')->where('status', 'active');
+        $query = ChurchProfile::with('denomination:id,name','teamMembers.user:id,name,email,avatar')->select('id', 'church_name','address','denomination_id')->where('status', 'active');
 
         if ($request->has('church_name') && $request->church_name) {
             $query->where('church_name', 'like', '%' . $request->church_name . '%');
@@ -100,8 +102,8 @@ class ChurchController extends Controller
 
     public function getChurchProfileById($id)
     {
-        $data = ChurchProfile::with('teamMembers.user:id,name,email,avatar')
-            ->select('id', 'church_name', 'email', 'phone', 'denomination', 'address', 'city_and_size')
+        $data = ChurchProfile::with('denomination:id,name','city:id,name','state:id,name','teamMembers.user:id,name,email,avatar')
+            ->select('id', 'denomination_id', 'city_id', 'state_id', 'church_name', 'email', 'phone', 'address')
             ->where('status', 'active')
             ->where('id', $id)
             ->first();

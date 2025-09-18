@@ -22,5 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TrainingProgramTableSeeder::class);
         $this->call(IncidentTypeSeeder::class);
         $this->call(LocationSeeder::class);
+        $this->call(DenominationSeeder::class);
+        $this->call(CityStateSeeder::class);
     }
 }

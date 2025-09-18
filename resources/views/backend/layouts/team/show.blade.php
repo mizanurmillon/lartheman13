@@ -74,10 +74,10 @@
                             <li class="list-group-item"><span class="fw-bold">Church Type:</span> {{ $teamMember->churchProfile->user_name }}</li>
                             <li class="list-group-item"><span class="fw-bold">Email:</span> {{ $teamMember->churchProfile->email }}</li>
                             <li class="list-group-item"><span class="fw-bold">Phone:</span> {{ $teamMember->churchProfile->phone }}</li>
-                            <li class="list-group-item"><span class="fw-bold">Denomination:</span> {{ $teamMember->churchProfile->denomination }}</li>
+                            <li class="list-group-item"><span class="fw-bold">Denomination:</span> {{ $teamMember->churchProfile->denomination->name }}</li>
                             <li class="list-group-item"><span class="fw-bold">Address:</span> {{ $teamMember->churchProfile->address }}</li>
-                            <li class="list-group-item"><span class="fw-bold">City:</span> {{ $teamMember->churchProfile->city }}</li>
-                            <li class="list-group-item"><span class="fw-bold">State:</span> {{ $teamMember->churchProfile->state ?? 'N/A' }}</li>
+                            <li class="list-group-item"><span class="fw-bold">City:</span> {{ $teamMember->churchProfile->city->name }}</li>
+                            <li class="list-group-item"><span class="fw-bold">State:</span> {{ $teamMember->churchProfile->state->name ?? 'N/A' }}</li>
                         </ul>
 
                         <div class="mt-3">

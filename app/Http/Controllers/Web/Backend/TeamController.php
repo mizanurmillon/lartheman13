@@ -43,16 +43,16 @@ class TeamController extends Controller
                     return $data->churchProfile->user_name;
                 })
                 ->addColumn('denomination', function ($data) {
-                    return $data->churchProfile->denomination;
+                    return $data->churchProfile->denomination->name;
                 })
                 ->addColumn('address', function ($data) {
                     return $data->churchProfile->address;
                 })
                 ->addColumn('city', function ($data) {
-                    return $data->churchProfile->city;
+                    return $data->churchProfile->city->name;
                 })
                 ->addColumn('state', function ($data) {
-                    return $data->churchProfile->state ?? 'N/A';
+                    return $data->churchProfile->state->name ?? 'N/A';
                 })
                 ->addColumn('role', function ($data) {
                     if ($data->role == 'admin') {

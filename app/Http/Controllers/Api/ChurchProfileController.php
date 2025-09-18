@@ -30,7 +30,7 @@ class ChurchProfileController extends Controller
             return $this->error([], 'Church Profile not found', 404);
         }
 
-        $data = ChurchProfile::select('id', 'church_name', 'phone', 'email', 'denomination', 'address', 'city_and_size')->where('id', $teamMember->church_profile_id)->first();
+        $data = ChurchProfile::with('denomination:id,name', 'city:id,name', 'state:id,name')->select('id', 'church_name', 'phone', 'email', 'denomination_id', 'address', 'city_id', 'state_id')->where('id', $teamMember->church_profile_id)->first();
 
         return $this->success($data, 'Church Profile fetched successfully', 200);
     }
@@ -39,10 +39,11 @@ class ChurchProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'church_name'   => 'required|string|max:255',
-            'denomination' => 'nullable|string|max:255',
+            'denomination_id' => 'nullable|exists:denominations,id',
             'phone' => 'nullable|phone:AUTO',
             'address' => 'nullable|string|max:255',
-            'city_and_size' => 'nullable|string|max:255',
+            'city_id' => 'nullable|exists:cities,id',
+            'state_id' => 'nullable|exists:states,id',
 
         ], [
             'name.required' => 'Name is required',
@@ -71,11 +72,14 @@ class ChurchProfileController extends Controller
 
         $teamMember->churchProfile->update($request->only([
             'church_name',
-            'denomination',
+            'denomination_id',
             'phone',
             'address',
-            'city_and_size'
+            'city_id',
+            'state_id',
         ]));
+
+        $teamMember->churchProfile->load('denomination', 'city', 'state');
 
         return $this->success($teamMember, 'Church Profile updated successfully', 200);
     }
