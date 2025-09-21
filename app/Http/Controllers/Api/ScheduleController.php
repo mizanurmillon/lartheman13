@@ -28,7 +28,7 @@ class ScheduleController extends Controller
             $query->where('status', $request->status);
         }
 
-        
+
         $data = $query->get();
 
         if ($data->isEmpty()) {
@@ -63,7 +63,7 @@ class ScheduleController extends Controller
             return $this->error([], 'User Not Found', 404);
         }
 
-        $data = Schedule::where('user_id', $user->id)->where('date', '>=', Carbon::now()->format('Y-m-d'))->get();
+        $data = Schedule::with('AssingnMember.user:id,name,email,avatar')->where('user_id', $user->id)->where('date', '>=', Carbon::now()->format('Y-m-d'))->get();
 
         if ($data->isEmpty()) {
             return $this->error([], 'Schedule not found', 404);
