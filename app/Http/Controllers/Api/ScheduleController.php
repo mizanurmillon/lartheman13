@@ -28,6 +28,7 @@ class ScheduleController extends Controller
             $query->where('status', $request->status);
         }
 
+        
         $data = $query->get();
 
         if ($data->isEmpty()) {
@@ -35,7 +36,7 @@ class ScheduleController extends Controller
         }
         return $this->success($data, 'Schedule found successfully', 200);
     }
-    
+
 
     public function singleSchedule($id)
     {
