@@ -35,6 +35,7 @@ class ScheduleController extends Controller
         }
         return $this->success($data, 'Schedule found successfully', 200);
     }
+    
 
     public function singleSchedule($id)
     {
@@ -44,7 +45,7 @@ class ScheduleController extends Controller
             return $this->error([], 'User Not Found', 404);
         }
 
-        $data = Schedule::with('user:id,name,avatar')->find($id);
+        $data = Schedule::with('user:id,name,avatar', 'AssingnMember.user:id,name,email,avatar')->find($id);
 
         if (!$data) {
             return $this->error([], 'Schedule not found', 404);
