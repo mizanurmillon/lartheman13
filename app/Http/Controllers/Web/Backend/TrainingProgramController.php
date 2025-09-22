@@ -44,6 +44,13 @@ class TrainingProgramController extends Controller
                     }
                     return '<a href="' . asset($file) . '" target="_blank">' . $file . '</a>';
                 })
+                ->addColumn('thumbnail', function ($data) {
+                    $thumbnail = $data->thumbnail;
+                    if (!$thumbnail) {
+                        return 'No Thumbnail';
+                    }
+                    return '<img src="' . asset($thumbnail) . '" alt="Thumbnail" width="100" height="50">';
+                })
                 ->addColumn('status', function ($data) {
                     $status = ' <div class="form-check form-switch">';
                     $status .= ' <input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
@@ -64,7 +71,7 @@ class TrainingProgramController extends Controller
                                 </a>
                             </div>';
                 })
-                ->rawColumns(['description', 'status', 'action', 'video', 'file_url'])
+                ->rawColumns(['description', 'status', 'action', 'video', 'file_url', 'thumbnail'])
                 ->make();
         }
         return view('backend.layouts.training_programs.index');
@@ -80,9 +87,15 @@ class TrainingProgramController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:2550',
+            'thumbnail' => 'required|mimes:jpg,jpeg,png|max:2048',
             'video' => 'nullable|mimetypes:video/mp4,video/ogg,video/webm|max:512000',
             'file_url' => 'nullable|mimes:pdf,doc,docx|max:5120',
         ]);
+
+        if ($request->hasFile('thumbnail')) {
+            $thumbnail                    = $request->file('thumbnail');
+            $thumbnailName                = uploadImage($thumbnail, 'training_programs');
+        }
 
         if ($request->hasFile('video')) {
             $video                        = $request->file('video');
@@ -101,6 +114,7 @@ class TrainingProgramController extends Controller
         $training_program = TrainingProgram::create([
             'title' => $request->title,
             'description' => $request->description,
+            'thumbnail' => $thumbnailName,
             'video' => $videoName,
             'file_url' => $fileName ?? null,
         ]);
@@ -123,11 +137,26 @@ class TrainingProgramController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:2550',
+            'thumbnail' => 'nullable|mimes:jpg,jpeg,png|max:2048',
             'video' => 'mimetypes:video/mp4,video/ogg,video/webm|max:512000',
             'file_url' => 'nullable|mimes:pdf,doc,docx|max:5120',
         ]);
 
         $training_program = TrainingProgram::findOrFail($id);
+
+        if ($request->hasFile('thumbnail')) {
+            if ($training_program->thumbnail) {
+                $previousImagePath = public_path($training_program->thumbnail);
+                if (file_exists($previousImagePath)) {
+                    unlink($previousImagePath);
+                }
+            }
+            $thumbnail                        = $request->file('thumbnail');
+            $thumbnailName                    = uploadImage($thumbnail, 'training_programs');
+            $training_program->thumbnail = $thumbnailName;
+        } else {
+            $thumbnailName = $training_program->thumbnail;
+        }
 
         if ($request->hasFile('video')) {
             if ($training_program->video) {
@@ -159,6 +188,7 @@ class TrainingProgramController extends Controller
         $training_program->update([
             'title' => $request->title,
             'description' => $request->description,
+            'thumbnail' => $thumbnailName,
             'video' => $videoName,
             'file_url' => $fileName ?? null,
         ]);
@@ -194,6 +224,13 @@ class TrainingProgramController extends Controller
     {
 
         $data = TrainingProgram::findOrFail($id);
+
+        if ($data->thumbnail) {
+            $previousImagePath = public_path($data->thumbnail);
+            if (file_exists($previousImagePath)) {
+                unlink($previousImagePath);
+            }
+        }
 
         if ($data->video) {
             $previousImagePath = public_path($data->video);

@@ -21,4 +21,15 @@ class TrainingProgramController extends Controller
 
         return $this->success($data, 'Training Program fetch Successful!', 200);
     }
+
+    public function trainingProgram($id)
+    {
+        $data = TrainingProgram::where('id', $id)->where('status', 'active')->first();
+
+        if (!$data) {
+            return $this->error([], 'Training Program not found', 200);
+        }
+
+        return $this->success($data, 'Training Program fetch Successful!', 200);
+    }
 }

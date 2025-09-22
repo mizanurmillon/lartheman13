@@ -22,7 +22,7 @@ class ScheduleController extends Controller
             return $this->error([], 'User Not Found', 404);
         }
 
-        $query = Schedule::where('user_id', $user->id);
+        $query = Schedule::with('AssingnMember.user:id,name,email,avatar')->where('user_id', $user->id);
 
         if($request->has('status')) {
             $query->where('status', $request->status);

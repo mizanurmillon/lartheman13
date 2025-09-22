@@ -130,6 +130,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
 Route::controller(TrainingProgramController::class)->group(function () {
     Route::get('/training-programs', 'trainingPrograms');
+    Route::get('/training-programs/{id}', 'trainingProgram');
 });
 
 

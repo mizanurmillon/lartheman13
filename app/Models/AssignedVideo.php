@@ -12,7 +12,6 @@ class AssignedVideo extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
-        'status'
     ];
 
     protected $casts = [

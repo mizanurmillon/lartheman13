@@ -86,6 +86,7 @@ class AssignedVideoController extends Controller
             'name' => $assignedVideos->first()->receiver->name,
             'email' => $assignedVideos->first()->receiver->email,
             'avatar' => $assignedVideos->first()->receiver->avatar,
+            'status' => $assignedVideos->first()->status,
             'training_programs' => $assignedVideos->pluck('trainingProgram')
         ];
 

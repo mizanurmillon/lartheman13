@@ -73,6 +73,17 @@
                             </div>
 
                             <div class="mt-4">
+                                <label for="thumbnail" class="form-label">Video Thumbnail</label>
+                                <input type="file" class="dropify form-control @error('thumbnail') is-invalid @enderror"
+                                    name="thumbnail" id="thumbnail" value="{{ old('thumbnail') }}" placeholder="Enter File" accept="image/*" data-default-file="{{ asset( $data->thumbnail ?? 'backend/images/placeholder/image_placeholder.png') }}" />
+                                @error('thumbnail')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="mt-4">
                                 <label for="video" class="form-label">Video</label>
                                 <input type="file" class="form-control @error('video') is-invalid @enderror"
                                     name="video" id="video" value="{{ old('video') }}" placeholder="Enter Video"
