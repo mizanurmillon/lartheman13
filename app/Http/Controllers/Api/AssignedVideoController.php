@@ -29,7 +29,7 @@ class AssignedVideoController extends Controller
 
         if ($exitingAssignment) {
             $exitingAssignment->delete(); 
-            return $this->error([], 'Unassigned video successfully', 200);
+            return $this->error(['assigned' => false], 'Unassigned video successfully', 200);
         }
 
         $data = AssignedVideo::create([
@@ -42,7 +42,10 @@ class AssignedVideoController extends Controller
             return $this->error([], 'Failed to assign video', 500);
         }
 
-        return $this->success($data, 'Video assigned successfully', 201);
+        return $this->success([
+            'assigned' => true, 
+            'data' => $data
+        ], 'Video assigned successfully', 201);
     }
 
     public function allAssignedVideos()
