@@ -130,6 +130,60 @@ class ScheduleController extends Controller
         return $this->success($data, 'Schedule created successfully', 200);
     }
 
+    public function updateSchedule(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string|max:2000',
+            'priority_level' => 'sometimes|required|in:high,medium,low,critical',
+            'date' => 'sometimes|required|date',
+            'time' => 'sometimes|required|date_format:H:i',
+            'location' => 'sometimes|required|string|max:255',
+            'user_id' => 'sometimes|required|array',
+            'user_id.*' => 'required|exists:users,id',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error([], $validator->errors()->first(), 422);
+        }
+
+        $user = auth()->user();
+
+        if (!$user) {
+            return $this->error([], 'User Not Found', 404);
+        }
+
+        $data = Schedule::find($id);
+
+        if (!$data) {
+            return $this->error([], 'Schedule not found', 404);
+        }
+
+        // Update only the fields that are present in the request
+        foreach ($request->only(['title', 'description', 'priority_level', 'date', 'time', 'location']) as $key => $value) {
+            $data->$key = $value;
+        }
+
+        $data->save();
+
+        if ($request->has('user_id')) {
+            // Remove existing assignments
+            AssingnMember::where('schedule_id', $data->id)->delete();
+
+            // Add new assignments
+            foreach ($request->user_id as $user_id) {
+                AssingnMember::create([
+                    'schedule_id' => $data->id,
+                    'user_id' => $user_id
+                ]);
+            }
+        }
+
+        $data->load('AssingnMember');
+
+        return $this->success($data, 'Schedule updated successfully', 200);
+    }
+
     public function deleteSchedule($id)
     {
         $user = auth()->user();
@@ -147,5 +201,24 @@ class ScheduleController extends Controller
         $data->delete();
 
         return $this->success([], 'Schedule deleted successfully', 200);
+    }
+
+    public function removeMember($id)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return $this->error([], 'User Not Found', 404);
+        }
+
+        $assignment = AssingnMember::find($id);
+
+        if (!$assignment) {
+            return $this->error([], 'Assignment not found', 404);
+        }
+
+        $assignment->delete();
+
+        return $this->success([], 'Member removed from schedule successfully', 200);
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('training_program_id')->constrained('training_programs')->onDelete('cascade');
-            $table->enum('status', ['pending','in_progress','watching','completed'])->default('pending');
+            $table->enum('status', ['assigned','in_progress','watching','completed'])->default('assigned');
             $table->timestamps();
         });
     }

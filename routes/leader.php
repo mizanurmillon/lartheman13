@@ -31,8 +31,10 @@ Route::group(['middleware' => ['jwt.verify']], function () {
            Route::post('/create-schedule', 'create'); 
            Route::get('/get-schedule', 'allSchedule');
            Route::get('/get-schedule/{id}', 'singleSchedule');
+           Route::post('/update-schedule/{id}', 'updateSchedule');
            Route::get('/upcoming-schedule', 'upcomingSchedule');
            Route::delete('/delete-schedule/{id}', 'deleteSchedule');
+           Route::delete('/assign-member/{id}', 'removeMember');
         });
 
         Route::controller(AssignedVideoController::class)->group(function () {

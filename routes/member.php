@@ -32,6 +32,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
         Route::controller(AssignByVideoController::class)->group(function () {
             Route::get('/assign-by-video', 'assignByVideo');
+            Route::post('/update-video-status/{id}', 'updateVideoStatus');
         });
 
     });

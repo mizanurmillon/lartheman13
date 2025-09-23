@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\AssignedVideo;
+use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+
+use function Pest\Laravel\delete;
 
 class AssignedVideoController extends Controller
 {
@@ -17,7 +20,7 @@ class AssignedVideoController extends Controller
         $user = auth()->user();
 
         if (!$user) {
-            return $this->error(null, 'Unauthorized', 401);
+            return $this->error([], 'Unauthorized', 401);
         }
 
         $exitingAssignment = AssignedVideo::where('receiver_id', $request->receiver_id)
@@ -25,7 +28,8 @@ class AssignedVideoController extends Controller
             ->first();
 
         if ($exitingAssignment) {
-            return $this->error([], 'This video has already been assigned to the selected user', 409);
+            $exitingAssignment->delete(); 
+            return $this->error([], 'Unassigned video successfully', 200);
         }
 
         $data = AssignedVideo::create([
@@ -35,7 +39,7 @@ class AssignedVideoController extends Controller
         ]);
 
         if (!$data) {
-            return $this->error(null, 'Failed to assign video', 500);
+            return $this->error([], 'Failed to assign video', 500);
         }
 
         return $this->success($data, 'Video assigned successfully', 201);
@@ -49,18 +53,39 @@ class AssignedVideoController extends Controller
             return $this->error([], 'Unauthorized', 401);
         }
 
-        $data = AssignedVideo::with(['receiver:id,name,email,avatar'])
+        $assignedVideos = AssignedVideo::with(['receiver:id,name,email,avatar'])
             ->where('sender_id', $user->id)
             ->get()
-            ->unique('receiver_id')
-            ->values();
+            ->groupBy('receiver_id');
 
-        if ($data->isEmpty()) {
+        if ($assignedVideos->isEmpty()) {
             return $this->error([], 'No assigned videos found', 404);
         }
 
+        $data = $assignedVideos->map(function ($videos, $receiverId) {
+            $receiver = $videos->first()->receiver;
+
+            $total = $videos->count();
+            $completed = $videos->where('status', 'completed')->count();
+            $watching = $videos->where('status', 'watching')->count();
+
+            if ($completed === $total) {
+                $status = 'completed';
+            } elseif ($watching > 0) {
+                $status = 'watching';
+            } else {
+                $status = 'assigned';
+            }
+
+            return [
+                'receiver' => $receiver,
+                'status'   => $status,
+            ];
+        })->values();
+
         return $this->success($data, 'Assigned videos retrieved successfully', 200);
     }
+
 
     public function singleAssignedVideo($id)
     {
@@ -70,26 +95,27 @@ class AssignedVideoController extends Controller
             return $this->error([], 'Unauthorized', 401);
         }
 
-        // Get all assigned videos for this receiver
-        $assignedVideos = AssignedVideo::with('trainingProgram')
-            ->where('sender_id', $user->id)
-            ->where('receiver_id', $id)
-            ->get();
+        // Get a single assigned video for this receiver
+        $assignedVideo = User::with(['assignedVideos' => function ($query) use ($user) {
+            $query->where('sender_id', $user->id)
+                ->with('trainingProgram');
+        }])
+            ->select('id', 'name', 'email', 'avatar')
+            ->find($id);
 
-        if ($assignedVideos->isEmpty()) {
-            return $this->error([], 'No assigned videos found for this user', 404);
+        $totalVideos = $assignedVideo ? $assignedVideo->assignedVideos->count() : 0;
+        $completedVideos = $assignedVideo ? $assignedVideo->assignedVideos->where('status', 'completed')->count() : 0;
+
+        if (!$assignedVideo) {
+            return $this->error([], 'No assigned video found for this user', 404);
         }
 
-        // Prepare data: group all training programs under a single receiver
-        $receiverData = [
-            'id' => $assignedVideos->first()->receiver->id,
-            'name' => $assignedVideos->first()->receiver->name,
-            'email' => $assignedVideos->first()->receiver->email,
-            'avatar' => $assignedVideos->first()->receiver->avatar,
-            'status' => $assignedVideos->first()->status,
-            'training_programs' => $assignedVideos->pluck('trainingProgram')
+        $data = [
+            'total_videos' => $totalVideos,
+            'completed_videos' => $completedVideos,
+            'receiver' => $assignedVideo,
         ];
 
-        return $this->success($receiverData, 'Assigned videos for the user retrieved successfully', 200);
+        return $this->success($data, 'Assigned video retrieved successfully', 200);
     }
 }

@@ -79,4 +79,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(TeamMember::class);
     }
+
+    public function assignedVideos(): HasMany
+    {
+        return $this->hasMany(AssignedVideo::class, 'receiver_id');
+    }
 }
