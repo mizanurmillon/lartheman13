@@ -36,7 +36,7 @@ class TeamMemberController extends Controller
             $search = $request->input('search');
             $query->whereHas('user', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -73,7 +73,7 @@ class TeamMemberController extends Controller
             $search = $request->input('search');
             $query->whereHas('user', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -84,5 +84,87 @@ class TeamMemberController extends Controller
         }
 
         return $this->success($teamAdmins, 'Team Admins fetched successfully', 200);
+    }
+
+    public function removeTeamMember($id)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return $this->error([], 'User Not Found', 404);
+        }
+
+        // Logged-in user church_profile id
+        $churchProfileId = $user->teamMembers()->pluck('church_profile_id')->first();
+
+        if (!$churchProfileId) {
+            return $this->error([], 'User is not assigned to any church', 404);
+        }
+
+        // Find the team member to be removed
+        $teamMember = TeamMember::where('id', $id)
+            ->where('church_profile_id', $churchProfileId)
+            ->first();
+
+        if (!$teamMember) {
+            return $this->error([], 'Team Member Not Found in your church', 404);
+        }
+
+        // Prevent removing oneself
+        if ($teamMember->user_id === $user->id) {
+            return $this->error([], 'You cannot remove yourself from the team', 403);
+        }
+
+        // Check if the team member has assigned videos
+        $hasAssignedVideos = AssignedVideo::where('receiver_id', $teamMember->user_id)->exists();
+
+        if ($hasAssignedVideos) {
+            return $this->error([], 'Cannot remove team member with assigned videos. Please reassign or delete their videos first.', 400);
+        }
+
+        // Remove the team member
+        $teamMember->delete();
+
+        return $this->success([], 'Team Member removed successfully', 200);
+    }
+
+    public function leaveTeam()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return $this->error([], 'User not found', 404);
+        }
+
+        // Logged-in user team member record
+        $teamMember = TeamMember::where('user_id', $user->id)->first();
+
+        if (!$teamMember) {
+            return $this->error([], 'You are not assigned to any team', 404);
+        }
+
+        $churchProfileId = $teamMember->church_profile_id;
+
+        // Count admins in this church team
+        $adminCount = TeamMember::where('church_profile_id', $churchProfileId)
+            ->where('role', 'admin')
+            ->count();
+
+        // If user is last admin -> block leaving
+        if ($teamMember->role === 'admin' && $adminCount < 2) {
+            return $this->error([], 'You cannot leave the team as the last admin', 403);
+        }
+
+        // Check if user has assigned videos
+        $hasAssignedVideos = AssignedVideo::where('receiver_id', $user->id)->exists();
+
+        if ($hasAssignedVideos) {
+            return $this->error([], 'Cannot leave the team with assigned videos. Please reassign or delete your videos first.', 400);
+        }
+
+        // Leave the team
+        $teamMember->delete();
+
+        return $this->success([], 'You have left the team successfully', 200);
     }
 }
