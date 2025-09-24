@@ -38,6 +38,8 @@ class RegisterController extends Controller {
         );
 
         Mail::to($user->email)->send(new RegistationOtp($user, $code));
+
+        return $code;
     }
 
     /**
@@ -80,13 +82,15 @@ class RegisterController extends Controller {
 
             $user->save();
 
-            $this->sendOtp($user);
+            $code = $this->sendOtp($user);
 
         //    // Generate a JWT token for the user
         //    $token = JWTAuth::fromUser($user);
 
         //    // Add the token to the user object
         //    $user->setAttribute('token', $token);
+
+            $user->setAttribute('otp', $code);
 
             return $this->success($user, 'User registered successfully', 201);
         } catch (\Exception $e) {

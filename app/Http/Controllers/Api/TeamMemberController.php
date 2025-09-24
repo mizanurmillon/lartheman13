@@ -48,4 +48,41 @@ class TeamMemberController extends Controller
 
         return $this->success($teamMembers, 'Team Members fetched successfully', 200);
     }
+
+    public function allTeamAdmins(Request $request)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return $this->error([], 'User Not Found', 404);
+        }
+
+        // Logged-in user church_profile id
+        $churchProfileId = $user->teamMembers()->pluck('church_profile_id')->first();
+
+        if (!$churchProfileId) {
+            return $this->error([], 'User is not assigned to any church', 404);
+        }
+
+        // church_profile admin role list 
+        $query = TeamMember::with('user:id,name,email,avatar')
+            ->where('church_profile_id', $churchProfileId)
+            ->where('role', 'admin');
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $teamAdmins = $query->get();
+
+        if ($teamAdmins->isEmpty()) {
+            return $this->error([], 'No admins found in this church', 404);
+        }
+
+        return $this->success($teamAdmins, 'Team Admins fetched successfully', 200);
+    }
 }

@@ -10,6 +10,10 @@ use App\Http\Controllers\Api\RequestReportIncidentController;
 
 Route::group(['middleware' => ['jwt.verify']], function () {
 
+    Route::controller(TeamMemberController::class)->group(function () {
+            Route::delete('/leave-team/{id}', 'leaveTeam');
+    });
+
 
     Route::group(['middleware' => ['leader']], function () {
 
@@ -25,6 +29,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
         Route::controller(TeamMemberController::class)->group(function () {
             Route::get('/get-team-members', 'allTeamMembers');
+            Route::get('/get-team-admin', 'allTeamAdmins');
         });
 
         Route::controller(ScheduleController::class)->group(function () {
