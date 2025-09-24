@@ -22,7 +22,7 @@ class ChurchController extends Controller
                 'church_name' => 'required|string|max:255',
                 'user_name' => 'nullable|string|unique:church_profiles,user_name',
                 'email' => 'required|email|unique:church_profiles,email',
-                'phone' => 'required|phone:AUTO|unique:church_profiles,phone',
+                'phone' => 'required|string|unique:church_profiles,phone',
                 'denomination_id' => 'required|exists:denominations,id',
                 'address' => 'required|string|max:500',
                 'city_id' => 'required|exists:cities,id',

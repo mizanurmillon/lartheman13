@@ -126,6 +126,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/{id}/members', 'groupMember');
         });
     });
+
+    
 });
 
 Route::controller(TrainingProgramController::class)->group(function () {

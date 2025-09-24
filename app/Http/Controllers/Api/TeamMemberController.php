@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\TeamMember;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use App\Models\AssignedVideo;
 use App\Http\Controllers\Controller;
 
 class TeamMemberController extends Controller

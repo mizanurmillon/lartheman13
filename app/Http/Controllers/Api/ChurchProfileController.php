@@ -40,7 +40,7 @@ class ChurchProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'church_name'   => 'required|string|max:255',
             'denomination_id' => 'nullable|exists:denominations,id',
-            'phone' => 'nullable|phone:AUTO',
+            'phone' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'city_id' => 'nullable|exists:cities,id',
             'state_id' => 'nullable|exists:states,id',
