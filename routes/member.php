@@ -16,7 +16,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
         Route::controller(ChurchController::class)->group(function () {
             Route::get('/church-profile', 'getChurchProfile');
             Route::get('/church-profile/{id}', 'getChurchProfileById');
-            Route::post('/join-church/{id}', 'joinChurch');
+            Route::get('/join-church/{id}', 'joinChurch');
         });
 
         Route::controller(RequestScheduleController::class)->group(function () {
