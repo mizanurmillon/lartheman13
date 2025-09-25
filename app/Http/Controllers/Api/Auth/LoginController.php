@@ -73,7 +73,8 @@ class LoginController extends Controller {
      public function userLogin(Request $request) {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
-            'password' => 'required'
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:leader,member',
         ]);
 
         if ($validator->fails()) {
@@ -99,6 +100,10 @@ class LoginController extends Controller {
 
                 $userData = auth()->user();
 
+                if ($userData->role != $request->role) {
+                    return $this->error([], 'Role mismatch', 403);
+                }
+                
                 $userData->setAttribute('token', $token);
             }
         } else {

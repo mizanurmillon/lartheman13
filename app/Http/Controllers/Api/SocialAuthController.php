@@ -23,6 +23,7 @@ class SocialAuthController extends Controller
             'username' => 'required|string',
             'email' => 'nullable|email',
             'avatar' => 'nullable|url',
+            'role' => 'required|in:leader,member',
         ]);
 
         // Check if the user already exists in the database
@@ -68,6 +69,7 @@ class SocialAuthController extends Controller
                 'avatar'         => $avatarPath, // Save avatar URL
                 'provider'       => $request->provider,
                 'password'       => bcrypt(Str::random(16)), // Generate a random password
+                'role'           => $request->role,
                 'agree_to_terms' => false,
             ]);
         } else {
@@ -88,6 +90,7 @@ class SocialAuthController extends Controller
             'email'    => $user->email,
             'avatar'   => $user->avatar,
             'provider' => $user->provider,
+            'role'     => $user->role,
             'agree_to_terms' => $user->agree_to_terms,
             'token'    => $token,
         ];
