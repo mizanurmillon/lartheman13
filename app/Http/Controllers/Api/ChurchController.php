@@ -73,7 +73,7 @@ class ChurchController extends Controller
             'role' => 'admin'
         ]);
 
-        $data->load('denomination','city','state','teamMembers');
+        $data->load('denomination', 'city', 'state', 'teamMembers');
 
         if (!$data) {
             return $this->error([], 'Church profile not created', 500);
@@ -85,7 +85,7 @@ class ChurchController extends Controller
 
     public function getChurchProfile(Request $request)
     {
-        $query = ChurchProfile::with('denomination:id,name','teamMembers.user:id,name,email,avatar')->select('id', 'church_name','address','denomination_id')->where('status', 'active');
+        $query = ChurchProfile::with('denomination:id,name', 'teamMembers.user:id,name,email,avatar')->select('id', 'church_name', 'address', 'denomination_id')->where('status', 'active');
 
         if ($request->has('church_name') && $request->church_name) {
             $query->where('church_name', 'like', '%' . $request->church_name . '%');
@@ -102,7 +102,7 @@ class ChurchController extends Controller
 
     public function getChurchProfileById($id)
     {
-        $data = ChurchProfile::with('denomination:id,name','city:id,name','state:id,name','teamMembers.user:id,name,email,avatar')
+        $data = ChurchProfile::with('denomination:id,name', 'city:id,name', 'state:id,name', 'teamMembers.user:id,name,email,avatar')
             ->select('id', 'denomination_id', 'city_id', 'state_id', 'church_name', 'email', 'phone', 'address')
             ->where('status', 'active')
             ->where('id', $id)
@@ -129,15 +129,21 @@ class ChurchController extends Controller
             return $this->error([], 'Church profile not found', 404);
         }
 
-        $teamMember = TeamMember::where('user_id', $user->id)->where('church_profile_id', $id)->first();
+        // check if user already belongs to a church
+        $existingChurch = TeamMember::where('user_id', $user->id)->first();
 
-        if($teamMember) {
+        if ($existingChurch) {
             
-           $teamMember->delete();
+            if ($existingChurch->church_profile_id == $id) {
 
-           return $this->success([], 'Church profile left successfully', 200);
+                $existingChurch->delete();
+
+                return $this->success([], 'Church profile left successfully', 200);
+            }
+            
+            return $this->error([], 'You can only join one church at a time', 403);
         }
-
+        
         $data = TeamMember::create([
             'user_id' => $user->id,
             'church_profile_id' => $id,
