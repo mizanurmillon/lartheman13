@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Models\ChurchProfile;
 use App\Models\TeamMember;
+use App\Notifications\UserNotification;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use App\Models\ChurchProfile;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class ChurchController extends Controller

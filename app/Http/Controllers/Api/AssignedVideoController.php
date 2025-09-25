@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\AssignedVideo;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use App\Models\AssignedVideo;
+use App\Enum\NotificationType;
 
 use function Pest\Laravel\delete;
+use App\Http\Controllers\Controller;
+use App\Notifications\UserNotification;
 
 class AssignedVideoController extends Controller
 {
@@ -28,7 +30,7 @@ class AssignedVideoController extends Controller
             ->first();
 
         if ($exitingAssignment) {
-            $exitingAssignment->delete(); 
+            $exitingAssignment->delete();
             return $this->error([], 'Unassigned video successfully', 200);
         }
 
@@ -41,6 +43,13 @@ class AssignedVideoController extends Controller
         if (!$data) {
             return $this->error([], 'Failed to assign video', 500);
         }
+
+        $data->receiver->notify(new UserNotification(
+            subject: 'Assigned',
+            message: 'You have been assigned a new video',
+            channels: ['database'],
+            type: NotificationType::SUCCESS,
+        ));
 
         return $this->success([
             'data' => $data

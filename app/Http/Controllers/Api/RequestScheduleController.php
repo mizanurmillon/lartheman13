@@ -6,7 +6,9 @@ use App\Models\Schedule;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use App\Models\AssingnMember;
+use App\Enum\NotificationType;
 use App\Http\Controllers\Controller;
+use App\Notifications\UserNotification;
 
 class RequestScheduleController extends Controller
 {
@@ -68,6 +70,22 @@ class RequestScheduleController extends Controller
         $schedule->status = 'active';
         $schedule->save();
 
+        $leaders = $schedule->churchProfile
+            ->teamMembers()
+            ->where('role', 'admin')
+            ->get();
+
+        foreach ($leaders as $leader) {
+            if ($leader->user) {
+                $leader->user->notify(new UserNotification(
+                    subject: 'Schedule accepted',
+                    message: 'Your schedule has been accepted',
+                    channels: ['database'],
+                    type: NotificationType::SUCCESS,
+                ));
+            }
+        }
+
         return $this->success($schedule, 'Schedule accepted successfully', 200);
     }
 
@@ -88,6 +106,22 @@ class RequestScheduleController extends Controller
         $schedule->status = 'rejected';
         $schedule->save();
 
+        $leaders = $schedule->churchProfile
+            ->teamMembers()
+            ->where('role', 'admin')
+            ->get();
+            
+        foreach ($leaders as $leader) {
+            if ($leader->user) {
+                $leader->user->notify(new UserNotification(
+                    subject: 'Schedule declined',
+                    message: 'Your schedule has been declined',
+                    channels: ['database'],
+                    type: NotificationType::ERROR,
+                ));
+            }
+        }
+
         return $this->success($schedule, 'Schedule declined successfully', 200);
-    }   
+    }
 }

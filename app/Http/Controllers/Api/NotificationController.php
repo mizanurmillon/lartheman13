@@ -26,4 +26,17 @@ class NotificationController extends Controller
 
         return $this->success($data, 'Notification fetched successfully', 200);
     }
+
+    public function clearAllNotification(Request $request)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return $this->error([], 'User not found', 404);
+        }
+
+        $user->unreadNotifications->markAsRead();
+
+        return $this->success([], 'All notifications marked as read', 200);
+    }
 }

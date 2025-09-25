@@ -106,6 +106,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     Route::controller(NotificationController::class)->group(function () {
         Route::get('/notification', 'getNotification');
+        Route::get('/clear-all-notification', 'clearAllNotification');
     });
 
     //Chat Route will be here

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use App\Enum\NotificationType;
 use App\Models\ReportIncident;
 use App\Http\Controllers\Controller;
+use App\Notifications\UserNotification;
 
 class RequestReportIncidentController extends Controller
 {
@@ -57,6 +59,13 @@ class RequestReportIncidentController extends Controller
         $data->status = 'approved';
         $data->save();
 
+        $data->user->notify(new UserNotification(
+            subject: 'Report incident approved',
+            message: 'Your report incident has been approved',
+            channels: ['database'],
+            type: NotificationType::SUCCESS,
+        ));
+
         return $this->success($data, 'Report incident approved successfully', 200);
     }
 
@@ -79,6 +88,13 @@ class RequestReportIncidentController extends Controller
 
         $data->status = 'rejected';
         $data->save();
+
+        $data->user->notify(new UserNotification(
+            subject: 'Report incident rejected',
+            message: 'Your report incident has been rejected',
+            channels: ['database'],
+            type: NotificationType::ERROR,
+        ));
 
         return $this->success($data, 'Report incident rejected successfully', 200);
     }

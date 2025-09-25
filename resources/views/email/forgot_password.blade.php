@@ -64,8 +64,7 @@
 
         <div class="footer">
             <p>Best regards,<br>
-                [Company_Name]<br>
-                [Contact_Information]
+                <p>Church Alert</p>
             </p>
         </div>
     </div>
