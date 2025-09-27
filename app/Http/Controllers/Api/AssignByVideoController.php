@@ -21,7 +21,7 @@ class AssignByVideoController extends Controller
         }
 
         $assignedVideos = AssignedVideo::with([
-            'trainingProgram:id,title,description,video',
+            'trainingProgram:id,title,description,thumbnail,video',
             'sender:id,name,email,avatar'
         ])
             ->where('receiver_id', $user->id)
