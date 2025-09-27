@@ -15,8 +15,8 @@ class DenominationController extends Controller
     {
         $data = Denomination::all();
 
-        if (!$data) {
-            return $this->error([], 'Denomination not found', 404);
+        if ($data->isEmpty()) {
+            return $this->success([], 'Denomination not found', 200);
         }
 
         return $this->success($data, 'Denomination fetched successfully', 200);

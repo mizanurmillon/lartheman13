@@ -16,7 +16,7 @@ class CityStateSeederController extends Controller
         $data = City::with('state')->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'City not found', 200);
+            return $this->success([], 'City not found', 200);
         }
         
         return $this->success($data, 'City fetch Successful!', 200);

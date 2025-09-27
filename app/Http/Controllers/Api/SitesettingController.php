@@ -21,7 +21,7 @@ class SitesettingController extends Controller
         $data = SystemSetting::where('id', 1)->first();
 
         if ($data == null) {
-            return $this->error([], 'System Settings not found', 200);
+            return $this->success([], 'System Settings not found', 200);
         }
 
         return $this->success($data, 'System Settings fetch Successful!', 200);

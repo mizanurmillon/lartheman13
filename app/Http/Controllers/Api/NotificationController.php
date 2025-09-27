@@ -21,7 +21,7 @@ class NotificationController extends Controller
         $data = $user->notifications()->select('id', 'data', 'read_at', 'created_at')->latest()->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Notification not found', 404);
+            return $this->success([], 'Notification not found', 200);
         }
 
         return $this->success($data, 'Notification fetched successfully', 200);

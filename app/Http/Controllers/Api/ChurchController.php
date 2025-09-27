@@ -94,8 +94,8 @@ class ChurchController extends Controller
 
         $data = $query->get();
 
-        if (!$data) {
-            return $this->error([], 'Church profile not found', 404);
+        if ($data->isEmpty()) {
+            return $this->success([], 'Church profile not found', 200);
         }
 
         return $this->success($data, 'Church profile fetched successfully', 200);

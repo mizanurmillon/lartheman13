@@ -21,7 +21,7 @@ class SocialLinkController extends Controller
         $data = SocialMedia::latest()->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Social Link not found', 200);
+            return $this->success([], 'Social Link not found', 200);
         }
 
         return $this->success($data, 'Social Link fetch Successful!', 200);
