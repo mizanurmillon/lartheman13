@@ -43,7 +43,7 @@ class TeamMemberController extends Controller
         $teamMembers = $query->get();
 
         if ($teamMembers->isEmpty()) {
-            return $this->error([], 'No members found in this church', 404);
+            return $this->success([], 'No members found in this church', 200);
         }
 
         return $this->success($teamMembers, 'Team Members fetched successfully', 200);
@@ -80,7 +80,7 @@ class TeamMemberController extends Controller
         $teamAdmins = $query->get();
 
         if ($teamAdmins->isEmpty()) {
-            return $this->error([], 'No admins found in this church', 404);
+            return $this->success([], 'No admins found in this church', 200);
         }
 
         return $this->success($teamAdmins, 'Team Admins fetched successfully', 200);

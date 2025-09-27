@@ -16,7 +16,7 @@ class TrainingProgramController extends Controller
         $data = TrainingProgram::where('status', 'active')->latest()->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Training Program not found', 200);
+            return $this->success([], 'Training Program not found', 200);
         }
 
         return $this->success($data, 'Training Program fetch Successful!', 200);

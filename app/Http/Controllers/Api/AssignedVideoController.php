@@ -70,7 +70,7 @@ class AssignedVideoController extends Controller
             ->groupBy('receiver_id');
 
         if ($assignedVideos->isEmpty()) {
-            return $this->error([], 'No assigned videos found', 404);
+            return $this->success([], 'No assigned videos found', 200);
         }
 
         $data = $assignedVideos->map(function ($videos, $receiverId) {

@@ -30,7 +30,7 @@ class RequestScheduleController extends Controller
             ->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Schedule not found', 404);
+            return $this->success([], 'Schedule not found', 200);
         }
 
         return $this->success($data, 'Schedule found successfully', 200);

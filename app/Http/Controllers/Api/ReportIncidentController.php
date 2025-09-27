@@ -24,8 +24,8 @@ class ReportIncidentController extends Controller
 
         $data = $query->latest()->get();
 
-        if (!$data) {
-            return $this->error([], 'Report incidents not found', 404);
+        if ($data->isEmpty()) {
+            return $this->success([], 'Report incidents not found', 200);
         }
         return $this->success($data, 'Report incidents fetched successfully', 200);
     }
@@ -144,7 +144,7 @@ class ReportIncidentController extends Controller
         $data = $data->latest()->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Report incidents not found', 404);
+            return $this->success([], 'Report incidents not found', 200);
         }
         return $this->success($data, 'Report incidents fetched successfully', 200);
     }
