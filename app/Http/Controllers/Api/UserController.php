@@ -27,8 +27,14 @@ class UserController extends Controller {
             return $this->error([], 'User Not Found', 404);
         }
 
-        return $this->success($user, 'User data fetched successfully', 200);
-    }
+        // Check if user has joined a team
+        $isJoined = $user->teamMembers()->exists();
+
+        // Append flag
+        $user->flag = $isJoined ? true : false;
+
+            return $this->success($user, 'User data fetched successfully', 200);
+        }
 
     /**
      * Update User Information
